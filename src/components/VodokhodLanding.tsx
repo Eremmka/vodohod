@@ -1,9 +1,8 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './VodokhodLanding.module.scss';
 import TruckIllustration from './TruckIllustration';
-
 import {
   ArrowIcon,
   CheckIcon,
@@ -12,6 +11,7 @@ import {
   MapPinIcon,
   MenuIcon,
   PhoneIcon,
+  StarIcon,
   TelegramIcon,
   TruckIcon,
 } from './icons';
@@ -19,13 +19,12 @@ import {
 const TELEGRAM_USERNAME =
   process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'eremkkaa';
 
-const PHONE = '8-(901)-309-38-09';
+const PHONE = '8 901 309 38 09';
 const PHONE_HREF = '+79013093809';
 
 const FORM_ENDPOINT = 'https://formspree.io/f/xljgeen';
 
-const ASSET_PREFIX =
-  process.env.NEXT_PUBLIC_BASE_PATH || '';
+const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const services = [
   [
@@ -97,7 +96,7 @@ const faq = [
   ],
   [
     'Сколько стоит доставка?',
-    'Цена зависит от объёма, адреса и срочности. Оставьте заявку — рассчитаем стоимость под ваш объект.',
+    'Цена зависит от объёма и адреса. Оставьте заявку — рассчитаем стоимость под ваш объект.',
   ],
   [
     'Можно ли заказать срочную доставку?',
@@ -144,32 +143,32 @@ const reviews = [
   [
     'Екатерина',
     '3 июля',
-    'Спасибо большое. Уже не первый год пользуюсь услугами Ивана. Очень вежливый, терпеливый. Привозит воды даже чуть больше, чем заявлено. Всегда можно с ним договориться. У нас очень сложный участок. Он единственный, кто работает сверх честно и порядочно. Так что однозначно советую.',
+    'Заказывали воду уже не первый раз. Сложный объект, всё было организовано чётко. Иван всегда на связи, предупреждает обо всём заранее и выполняет договорённости.',
   ],
   [
     'Николай',
     '2 июля',
-    'Договорились о доставке 5 кубометров воды, требовалось заполнить часть бассейна. Оговорили сумму и время доставки. Ивану огромное спасибо за оперативное решение вопроса, всё доставлено в оговоренное время и стоимость не менялась. Могу рекомендовать!',
+    'Заказывали 5 м³ для бассейна. Приехали вовремя, объём и цена остались такими, как договаривались. Всё прошло отлично.',
   ],
   [
     'Татьяна Таску',
     '20 мая',
-    'Не первый раз уже обращаюсь к Ивану по вопросу доставки воды для бассейна. Всё как всегда на высшем уровне! Воду доставили вовремя как и договаривались, цена как и было оговорено, воды налили даже больше, чем было заказано.',
+    'Заказываем воду для бассейна уже не первый раз. Всё вовремя, как договаривались. В очередной раз воды понадобилось больше — всё организовали без проблем.',
   ],
   [
     'Дмитрий Сергеев',
     '28 июля 2025',
-    'Привёз воду через два часа после обращения, как обещал. Твёрдые пять звёзд, ответственный конкретный мужик.',
+    'Нужна была вода срочно. Привезли примерно через два часа после обращения. Очень оперативно, спасибо.',
   ],
   [
     'Валентина',
     '28 июня',
-    'Позвонила, договорились о цене, месте и времени. Спасибо большое Ивану за исполнительность — привез воду через 1,5 часа. Будем обращаться ещё.',
+    'Воду привезли примерно через полтора часа. Обращаемся уже не первый раз, всё стабильно хорошо.',
   ],
   [
     'Ксения',
     '30 июля 2025',
-    'Списались с Иваном, договорились на доставку воды день в день для полива. Всё разлили быстро. Иван помог с гидрантом. Второй раз вызвали и разливали уже с мужем. Приятно было общаться.',
+    'Нужно было привезти воду в тот же день для полива. Всё организовали, помогли с гидрантом. Уже обращались раньше и снова остались довольны.',
   ],
 ];
 
@@ -178,61 +177,17 @@ export default function VodokhodLanding() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
 
-  const [formStatus, setFormStatus] = useState<
-    'idle' | 'submitting' | 'success' | 'error'
-  >('idle');
-
   const telegramUrl = useMemo(
-    () =>
-      `https://t.me/${TELEGRAM_USERNAME.replace('@', '')}`,
-    []
+    () => `https://t.me/${TELEGRAM_USERNAME.replace('@', '')}`,
+    [],
   );
 
   function closeMenu() {
     setMenuOpen(false);
   }
 
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
-
-    if (!FORM_ENDPOINT) {
-      setFormStatus('error');
-      return;
-    }
-
-    const form = event.currentTarget;
-
-    setFormStatus('submitting');
-
-    try {
-      const response = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: {
-          Accept: 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Formspree request failed');
-      }
-
-      form.reset();
-      setFormStatus('success');
-
-      window.setTimeout(() => {
-        setFormStatus('idle');
-      }, 6500);
-    } catch {
-      setFormStatus('error');
-    }
-  }
-
   return (
     <main>
-      {/* HEADER */}
       <header className={styles.header}>
         <div className="container">
           <div className={styles.navbar}>
@@ -301,19 +256,15 @@ export default function VodokhodLanding() {
                   setMenuOpen((value) => !value)
                 }
                 aria-label="Открыть меню"
+                type="button"
               >
-                {menuOpen ? (
-                  <CloseIcon />
-                ) : (
-                  <MenuIcon />
-                )}
+                {menuOpen ? <CloseIcon /> : <MenuIcon />}
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* HERO */}
       <section
         className={styles.hero}
         id="top"
@@ -329,8 +280,7 @@ export default function VodokhodLanding() {
               </span>
 
               <h1>
-                Вода на объект —
-                <span> сегодня</span>
+                Вода на объект — <span>сегодня</span>
               </h1>
 
               <p className={styles.heroLead}>
@@ -382,7 +332,7 @@ export default function VodokhodLanding() {
           <div className={styles.heroStats}>
             <div>
               <strong>2009</strong>
-              <span>работаем с этого года</span>
+              <span>год начала работы</span>
             </div>
 
             <div>
@@ -403,7 +353,6 @@ export default function VodokhodLanding() {
         </div>
       </section>
 
-      {/* SERVICES */}
       <section
         className="section"
         id="services"
@@ -430,9 +379,7 @@ export default function VodokhodLanding() {
                 className={styles.serviceCard}
                 key={title}
               >
-                <span
-                  className={styles.serviceIcon}
-                >
+                <span className={styles.serviceIcon}>
                   {String(index + 1).padStart(2, '0')}
                 </span>
 
@@ -447,45 +394,38 @@ export default function VodokhodLanding() {
               className={
                 styles.serviceImagePlaceholder
               }
-              aria-hidden="true"
             >
-              <div
-                className={styles.waterRipple}
-              />
+              <div className={styles.waterRipple} />
+
+              <span>
+                Место для фото
+                <br />
+                с реальной работы
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ADVANTAGES */}
       <section
         className={`${styles.softSection} section`}
         id="advantages"
       >
         <div className="container">
           <span className="eyebrow">
-            Почему нас выбирают
+            Почему выбирают нас
           </span>
 
           <h2 className="h2">
-            Работаем с 2009 года
+            Выгодно клиенту. Понятно с первого звонка.
           </h2>
-
-          <p className="section-lead">
-            «ВодоХод» — это доставка воды без
-            посредников. Владелец компании Иван лично
-            принимает заказы и сам доставляет воду
-            на объект.
-          </p>
 
           <div className={styles.advantagesGrid}>
             {advantages.map(
               ([big, title, text]) => (
                 <article
                   key={title}
-                  className={
-                    styles.advantageCard
-                  }
+                  className={styles.advantageCard}
                 >
                   <span
                     className={
@@ -501,13 +441,12 @@ export default function VodokhodLanding() {
 
                   <p>{text}</p>
                 </article>
-              )
+              ),
             )}
           </div>
         </div>
       </section>
 
-      {/* HOW */}
       <section
         className="section"
         id="how"
@@ -543,20 +482,16 @@ export default function VodokhodLanding() {
                 'Вы получаете воду',
                 'Подача воды под нужную вам задачу.',
               ],
-            ].map(
-              ([num, title, text]) => (
-                <div
-                  className={styles.step}
-                  key={num}
-                >
-                  <span>{num}</span>
-
-                  <h3>{title}</h3>
-
-                  <p>{text}</p>
-                </div>
-              )
-            )}
+            ].map(([num, title, text]) => (
+              <div
+                className={styles.step}
+                key={num}
+              >
+                <span>{num}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -578,8 +513,8 @@ export default function VodokhodLanding() {
 
               <p className="section-lead">
                 Доставляем воду по северу
-                Санкт-Петербурга и Ленинградской
-                области.
+                Санкт-Петербурга и
+                Ленинградской области.
               </p>
 
               <div className={styles.areaList}>
@@ -623,9 +558,7 @@ export default function VodokhodLanding() {
                 loading="lazy"
               />
 
-              <div
-                className={styles.mapBadge}
-              >
+              <div className={styles.mapBadge}>
                 <span />
                 Основная зона
                 <br />
@@ -651,6 +584,10 @@ export default function VodokhodLanding() {
           <div className={styles.specGrid}>
             <div className={styles.specVisual}>
               <TruckIllustration />
+
+              <div className={styles.photoTag}>
+                Здесь будет ваше фото водовоза
+              </div>
             </div>
 
             <div className={styles.specList}>
@@ -671,26 +608,22 @@ export default function VodokhodLanding() {
                   'Режим работы',
                   'Плановая и срочная доставка по договорённости',
                 ],
-              ].map(
-                ([label, value]) => (
-                  <div
-                    className={styles.specRow}
-                    key={label}
-                  >
-                    <span>
-                      <CheckIcon size={18} />
-                    </span>
+              ].map(([label, value]) => (
+                <div
+                  className={styles.specRow}
+                  key={label}
+                >
+                  <span>
+                    <CheckIcon size={18} />
+                  </span>
 
-                    <b>{label}</b>
+                  <b>{label}</b>
 
-                    <em>{value}</em>
-                  </div>
-                )
-              )}
+                  <em>{value}</em>
+                </div>
+              ))}
 
-              <div
-                className={styles.specNote}
-              >
+              <div className={styles.specNote}>
                 * Финальные условия, стоимость
                 и время подачи согласовываются
                 до выезда.
@@ -713,6 +646,13 @@ export default function VodokhodLanding() {
             Как выглядит доставка вживую
           </h2>
 
+          <p className="section-lead">
+            Сюда позже поставим ваши реальные
+            фотографии. Пока оставлены готовые
+            визуальные слоты, чтобы сайт уже
+            выглядел цельно.
+          </p>
+
           <div className={styles.galleryGrid}>
             {gallery.map((item, index) => (
               <button
@@ -725,6 +665,7 @@ export default function VodokhodLanding() {
                 onClick={() =>
                   setLightbox(index)
                 }
+                type="button"
               >
                 <img
                   src={item.image}
@@ -744,59 +685,40 @@ export default function VodokhodLanding() {
       >
         <div className="container">
           <span className="eyebrow">
-            Отзывы клиентов
+            Отзывы
           </span>
 
           <h2 className="h2">
-            Реальные отзывы с Авито
+            Нам доверяют
           </h2>
-
-          <p className="section-lead">
-            Клиенты отмечают оперативность,
-            соблюдение договорённостей и качество
-            доставки.
-          </p>
 
           <div className={styles.reviewsGrid}>
             {reviews.map(
               ([name, date, text]) => (
                 <article
                   className={styles.reviewCard}
-                  key={`${name}-${date}`}
+                  key={name}
                 >
                   <div className={styles.avatar}>
                     {name.slice(0, 1)}
                   </div>
 
-                  <div
-                    className={
-                      styles.reviewBody
-                    }
-                  >
+                  <div className={styles.reviewBody}>
                     <div
                       className={
-                        styles.reviewTop
+                        styles.reviewAuthor
                       }
                     >
-                      <div
-                        className={
-                          styles.reviewAuthor
-                        }
-                      >
-                        <strong>
-                          {name}
-                        </strong>
+                      <strong>{name}</strong>
+                      <span>{date}</span>
+                    </div>
 
-                        <span>{date}</span>
-                      </div>
-
-                      <small
-                        className={
-                          styles.reviewSource
-                        }
-                      >
-                        Авито
-                      </small>
+                    <div
+                      className={
+                        styles.reviewSource
+                      }
+                    >
+                      Авито
                     </div>
 
                     <div
@@ -807,10 +729,10 @@ export default function VodokhodLanding() {
                       Сделка состоялась
                     </div>
 
-                    <p>«{text}»</p>
+                    <p>{text}</p>
                   </div>
                 </article>
-              )
+              ),
             )}
           </div>
         </div>
@@ -842,12 +764,13 @@ export default function VodokhodLanding() {
                         setOpenFaq(
                           openFaq === index
                             ? null
-                            : index
+                            : index,
                         )
                       }
                       aria-expanded={
                         openFaq === index
                       }
+                      type="button"
                     >
                       <span>{question}</span>
 
@@ -866,14 +789,12 @@ export default function VodokhodLanding() {
                       <p>{answer}</p>
                     )}
                   </div>
-                )
+                ),
               )}
             </div>
 
             <aside
-              className={
-                styles.telegramCard
-              }
+              className={styles.telegramCard}
             >
               <span
                 className={
@@ -912,9 +833,7 @@ export default function VodokhodLanding() {
       >
         <div className="container">
           <div className={styles.orderGrid}>
-            <div
-              className={styles.orderCopy}
-            >
+            <div className={styles.orderCopy}>
               <span
                 className={
                   styles.orderEyebrow
@@ -929,10 +848,10 @@ export default function VodokhodLanding() {
               </h2>
 
               <p>
-                Заполните форму, и мы
-                свяжемся с вами, уточним
-                детали и рассчитаем стоимость
-                под вашу задачу.
+                Заполните форму, и мы свяжемся
+                с вами, уточним детали и
+                рассчитаем стоимость под вашу
+                задачу.
               </p>
 
               <div
@@ -976,10 +895,9 @@ export default function VodokhodLanding() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  @
-                  {TELEGRAM_USERNAME.replace(
+                  @{TELEGRAM_USERNAME.replace(
                     '@',
-                    ''
+                    '',
                   )}
                 </a>
               </div>
@@ -987,15 +905,10 @@ export default function VodokhodLanding() {
 
             <form
               className={styles.form}
-              action={FORM_ENDPOINT || '#'}
-              method="post"
-              onSubmit={handleSubmit}
+              action={FORM_ENDPOINT}
+              method="POST"
             >
-              <div
-                className={
-                  styles.formGrid
-                }
-              >
+              <div className={styles.formGrid}>
                 <label>
                   <span>
                     Как вас зовут
@@ -1004,19 +917,20 @@ export default function VodokhodLanding() {
                   <input
                     name="name"
                     placeholder="Иван"
+                    autoComplete="name"
                     required
                   />
                 </label>
 
                 <label>
-                  <span>
-                    Телефон
-                  </span>
+                  <span>Телефон</span>
 
                   <input
                     name="phone"
                     placeholder="8 900 000-00-00"
                     type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
                     required
                   />
                 </label>
@@ -1033,6 +947,7 @@ export default function VodokhodLanding() {
                   <input
                     name="address"
                     placeholder="Например: Санкт-Петербург, ул. ..."
+                    autoComplete="street-address"
                     required
                   />
                 </label>
@@ -1088,68 +1003,29 @@ export default function VodokhodLanding() {
                 value="Новая заявка — ВодоХод"
               />
 
-              <div
+              <input
+                type="hidden"
+                name="source"
+                value="Сайт ВодоХод"
+              />
+
+              <button
+                className="btn btn--primary"
+                type="submit"
+              >
+                Отправить заявку
+                <ArrowIcon />
+              </button>
+
+              <small
                 className={
-                  styles.formActions
+                  styles.formConsent
                 }
               >
-                <button
-                  className="btn btn--primary"
-                  type="submit"
-                  disabled={
-                    formStatus ===
-                    'submitting'
-                  }
-                >
-                  {formStatus ===
-                  'submitting'
-                    ? 'Отправляем...'
-                    : 'Отправить заявку'}
-
-                  {formStatus !==
-                    'submitting' && (
-                    <ArrowIcon />
-                  )}
-                </button>
-
-                <small
-                  className={
-                    styles.formConsent
-                  }
-                >
-                  Нажимая кнопку, вы
-                  соглашаетесь на обработку
-                  указанных данных для связи
-                  по заявке.
-                </small>
-              </div>
-
-              {formStatus ===
-                'success' && (
-                <div
-                  className={
-                    styles.formSuccess
-                  }
-                >
-                  Заявка отправлена. Мы
-                  свяжемся с вами для
-                  уточнения деталей.
-                </div>
-              )}
-
-              {formStatus ===
-                'error' && (
-                <div
-                  className={
-                    styles.formHint
-                  }
-                >
-                  Не удалось отправить
-                  заявку. Попробуйте ещё
-                  раз или напишите нам
-                  в Telegram.
-                </div>
-              )}
+                Нажимая кнопку, вы соглашаетесь
+                на обработку указанных данных
+                для связи по заявке.
+              </small>
             </form>
           </div>
         </div>
@@ -1157,11 +1033,7 @@ export default function VodokhodLanding() {
 
       <footer className={styles.footer}>
         <div className="container">
-          <div
-            className={
-              styles.footerTop
-            }
-          >
+          <div className={styles.footerTop}>
             <a
               className={styles.logo}
               href="#top"
@@ -1175,10 +1047,7 @@ export default function VodokhodLanding() {
               </span>
 
               <span>
-                <strong>
-                  ВодоХод
-                </strong>
-
+                <strong>ВодоХод</strong>
                 <small>
                   доставка воды на объект
                 </small>
@@ -1230,8 +1099,8 @@ export default function VodokhodLanding() {
             }
           >
             <span>
-              © 2026 ВодоХод. Доставка
-              воды на объект.
+              © 2026 ВодоХод. Доставка воды
+              на объект.
             </span>
 
             <span>
@@ -1242,7 +1111,6 @@ export default function VodokhodLanding() {
         </div>
       </footer>
 
-      {/* FLOATING ACTIONS */}
       <div
         className={
           styles.floatingActions
@@ -1265,12 +1133,9 @@ export default function VodokhodLanding() {
         </a>
       </div>
 
-      {/* LIGHTBOX */}
       {lightbox !== null && (
         <div
-          className={
-            styles.lightbox
-          }
+          className={styles.lightbox}
           role="dialog"
           aria-modal="true"
           aria-label="Просмотр фотографии"
@@ -1286,6 +1151,7 @@ export default function VodokhodLanding() {
               setLightbox(null)
             }
             aria-label="Закрыть"
+            type="button"
           >
             <CloseIcon />
           </button>
