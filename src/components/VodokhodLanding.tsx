@@ -22,7 +22,7 @@ const TELEGRAM_USERNAME =
 const PHONE = '8 901 309 38 09';
 const PHONE_HREF = '+79013093809';
 
-const FORM_ENDPOINT = 'https://formspree.io/f/xljgeen';
+const FORM_ENDPOINT = 'https://formspree.io/f/xljgeenk';
 
 const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
