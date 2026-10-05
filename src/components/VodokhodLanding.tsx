@@ -17,7 +17,7 @@ import {
 } from './icons';
 
 const TELEGRAM_USERNAME =
-  process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'eremkkaa';
+  process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'eremkkaaa';
 
 const PHONE = '8 901 309 38 09';
 const PHONE_HREF = '+79013093809';
