@@ -19,15 +19,10 @@ import {
 const TELEGRAM_USERNAME =
   process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || 'eremkkaa';
 
-const PHONE = '8 901 309 38 09';
+const PHONE = '8-(901)-309-38-09';
 const PHONE_HREF = '+79013093809';
 
-const FORMSPREE_ID =
-  process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID || '';
-
-const FORM_ENDPOINT = FORMSPREE_ID
-  ? `https://formspree.io/f/${FORMSPREE_ID}`
-  : '';
+const FORM_ENDPOINT = 'https://formspree.io/f/xljgeen';
 
 const ASSET_PREFIX =
   process.env.NEXT_PUBLIC_BASE_PATH || '';
