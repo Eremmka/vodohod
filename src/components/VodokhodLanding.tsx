@@ -1,10 +1,10 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 
 import styles from './VodokhodLanding.module.scss';
 import TruckIllustration from './TruckIllustration';
+import YandexMap from './YandexMap';
 
 import {
   ArrowIcon,
@@ -17,13 +17,6 @@ import {
   TelegramIcon,
   TruckIcon,
 } from './icons';
-
-const ServiceAreaMap = dynamic(
-  () => import('./ServiceAreaMap'),
-  {
-    ssr: false,
-  },
-);
 
 const TELEGRAM_USERNAME = 'eremkkaaa';
 
@@ -215,12 +208,15 @@ export default function VodokhodLanding() {
               href="#top"
               aria-label="ВодоХод — на главную"
             >
-              <span className={styles.logoMark}>
+              <span
+                className={styles.logoMark}
+              >
                 <DropletIcon size={30} />
               </span>
 
               <span>
                 <strong>ВодоХод</strong>
+
                 <small>
                   доставка воды на объект
                 </small>
@@ -262,7 +258,11 @@ export default function VodokhodLanding() {
               ))}
             </nav>
 
-            <div className={styles.headerActions}>
+            <div
+              className={
+                styles.headerActions
+              }
+            >
               <a
                 className={styles.phone}
                 href={`tel:${PHONE_HREF}`}
@@ -283,7 +283,9 @@ export default function VodokhodLanding() {
               </a>
 
               <button
-                className={styles.menuButton}
+                className={
+                  styles.menuButton
+                }
                 onClick={() =>
                   setMenuOpen(
                     (value) => !value,
@@ -307,14 +309,29 @@ export default function VodokhodLanding() {
         className={styles.hero}
         id="top"
       >
-        <div className={styles.heroGlow} />
+        <div
+          className={styles.heroGlow}
+        />
 
         <div className="container">
-          <div className={styles.heroGrid}>
-            <div className={styles.heroCopy}>
-              <span className={styles.pill}>
-                <DropletIcon size={16} />
-                Доставка воды для любых нужд
+          <div
+            className={
+              styles.heroGrid
+            }
+          >
+            <div
+              className={
+                styles.heroCopy
+              }
+            >
+              <span
+                className={styles.pill}
+              >
+                <DropletIcon
+                  size={16}
+                />
+                Доставка воды для любых
+                нужд
               </span>
 
               <h1>
@@ -390,6 +407,7 @@ export default function VodokhodLanding() {
           >
             <div>
               <strong>2009</strong>
+
               <span>
                 год начала работы
               </span>
@@ -397,6 +415,7 @@ export default function VodokhodLanding() {
 
             <div>
               <strong>8 м³</strong>
+
               <span>
                 объём цистерны
               </span>
@@ -404,6 +423,7 @@ export default function VodokhodLanding() {
 
             <div>
               <strong>Север</strong>
+
               <span>
                 Санкт-Петербурга
               </span>
@@ -411,6 +431,7 @@ export default function VodokhodLanding() {
 
             <div>
               <strong>Любые</strong>
+
               <span>
                 согласованные задачи
               </span>
@@ -429,14 +450,15 @@ export default function VodokhodLanding() {
           </span>
 
           <h2 className="h2">
-            Доставка воды для любых задач
+            Доставка воды для любых
+            задач
           </h2>
 
           <p className="section-lead">
             Неважно, бассейн у вас,
             стройка, производство или
-            частный дом. Расскажите, что
-            нужно решить — подберём
+            частный дом. Расскажите,
+            что нужно решить — подберём
             подходящий вариант доставки.
           </p>
 
@@ -587,7 +609,9 @@ export default function VodokhodLanding() {
                   key={num}
                 >
                   <span>{num}</span>
+
                   <h3>{title}</h3>
+
                   <p>{text}</p>
                 </div>
               ),
@@ -631,37 +655,49 @@ export default function VodokhodLanding() {
                 }
               >
                 <div>
-                  <MapPinIcon size={20} />
+                  <MapPinIcon
+                    size={20}
+                  />
 
                   <span>
                     Кондратьевский
-                    проспект, Пискарёвка,
+                    проспект,
+                    Пискарёвка,
                     Площадь Мужества,
-                    Ручьи и Пионерская
+                    Ручьи и
+                    Пионерская
                   </span>
                 </div>
 
                 <div>
-                  <MapPinIcon size={20} />
+                  <MapPinIcon
+                    size={20}
+                  />
 
                   <span>
                     Елизаветинка,
-                    Лесколово, Новое
-                    Токсово и Токсово
+                    Лесколово,
+                    Новое Токсово
+                    и Токсово
                   </span>
                 </div>
 
                 <div>
-                  <TruckIcon size={20} />
+                  <TruckIcon
+                    size={20}
+                  />
 
                   <span>
-                    Белоостров и севернее —
+                    Белоостров и
+                    севернее —
                     по договорённости
                   </span>
                 </div>
 
                 <div>
-                  <MapPinIcon size={20} />
+                  <MapPinIcon
+                    size={20}
+                  />
 
                   <span>
                     Всеволожск —
@@ -684,7 +720,7 @@ export default function VodokhodLanding() {
                 styles.mapWrap
               }
             >
-              <ServiceAreaMap />
+              <YandexMap />
             </div>
           </div>
         </div>
@@ -701,7 +737,9 @@ export default function VodokhodLanding() {
           </h2>
 
           <div
-            className={styles.specGrid}
+            className={
+              styles.specGrid
+            }
           >
             <div
               className={
@@ -787,7 +825,8 @@ export default function VodokhodLanding() {
           </span>
 
           <h2 className="h2">
-            Как выглядит доставка вживую
+            Как выглядит доставка
+            вживую
           </h2>
 
           <p className="section-lead">
@@ -924,7 +963,9 @@ export default function VodokhodLanding() {
           </h2>
 
           <div
-            className={styles.faqGrid}
+            className={
+              styles.faqGrid
+            }
           >
             <div>
               {faq.map(
@@ -1406,7 +1447,9 @@ export default function VodokhodLanding() {
 
       {lightbox !== null && (
         <div
-          className={styles.lightbox}
+          className={
+            styles.lightbox
+          }
           role="dialog"
           aria-modal="true"
           aria-label="Просмотр фотографии"

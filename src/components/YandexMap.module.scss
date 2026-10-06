@@ -4,18 +4,18 @@
   height: 560px;
   overflow: hidden;
 
-  border-radius: 28px;
   border: 1px solid rgba(136, 200, 229, 0.35);
+  border-radius: 28px;
 
   background: #eaf5fa;
 
-  box-shadow: 0 24px 60px rgba(43, 121, 166, 0.14);
+  box-shadow:
+    0 24px 60px rgba(43, 121, 166, 0.14);
 }
 
-.leafletMap {
+.mapCanvas {
   width: 100%;
   height: 100%;
-  z-index: 1;
 }
 
 .legend {
@@ -23,12 +23,12 @@
   top: 18px;
   right: 18px;
 
-  z-index: 500;
+  z-index: 20;
 
   min-width: 190px;
   padding: 14px;
 
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.88);
   border-radius: 16px;
 
   background: rgba(255, 255, 255, 0.94);
@@ -70,21 +70,21 @@
   border-radius: 50%;
 }
 
-.legendMain {
+.legendDotMain {
   background: #1598ee;
 
   box-shadow:
     0 0 0 3px rgba(21, 152, 238, 0.16);
 }
 
-.legendAgreement {
+.legendDotAgreement {
   background: #f4c542;
 
   box-shadow:
     0 0 0 3px rgba(244, 197, 66, 0.16);
 }
 
-.legendExcluded {
+.legendDotExcluded {
   background: #e45b5b;
 
   box-shadow:
@@ -98,7 +98,7 @@
   right: 18px;
   bottom: 18px;
 
-  z-index: 500;
+  z-index: 20;
 
   padding: 13px 15px;
 
@@ -122,99 +122,73 @@
   color: #16364a;
 }
 
-.mapError {
-  width: 100%;
-  height: 100%;
+.marker {
+  position: relative;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
 
-  gap: 8px;
+  width: max-content;
 
-  background:
-    linear-gradient(
-      135deg,
-      #edf8fc 0%,
-      #dceff7 100%
-    );
+  transform: translate(-50%, -50%);
 
-  color: #587184;
+  pointer-events: auto;
 }
 
-.mapError strong {
-  color: #16364a;
+.markerDot {
+  width: 13px;
+  height: 13px;
 
-  font-size: 18px;
-}
+  flex: 0 0 13px;
 
-.mapError span {
-  font-size: 13px;
-}
-
-:global(.leaflet-container) {
-  font-family: inherit;
-  background: #eaf5fa;
-}
-
-:global(.leaflet-control-zoom) {
-  overflow: hidden;
-
-  border: 0 !important;
-  border-radius: 12px !important;
+  border: 3px solid #fff;
+  border-radius: 50%;
 
   box-shadow:
-    0 10px 24px rgba(26, 82, 110, 0.16) !important;
+    0 3px 10px rgba(20, 65, 90, 0.24);
 }
 
-:global(.leaflet-control-zoom a) {
-  display: grid !important;
-  place-items: center;
+.markerLabel {
+  margin-left: 6px;
 
-  width: 34px !important;
-  height: 34px !important;
+  padding: 5px 8px;
 
-  color: #16364a !important;
-
-  background: rgba(255, 255, 255, 0.94) !important;
-
-  border: 0 !important;
-}
-
-:global(.leaflet-control-attribution) {
-  padding: 3px 6px !important;
-
-  font-size: 9px;
-
-  color: #6f8492 !important;
-
-  background: rgba(255, 255, 255, 0.82) !important;
-}
-
-:global(.leaflet-control-attribution a) {
-  color: #527183 !important;
-}
-
-:global(.leaflet-tooltip) {
-  padding: 6px 9px;
-
-  border: 0;
   border-radius: 8px;
 
+  background: rgba(255, 255, 255, 0.95);
+
   color: #16364a;
 
-  background: rgba(255, 255, 255, 0.96);
-
   box-shadow:
-    0 5px 14px rgba(26, 82, 110, 0.14);
+    0 5px 14px rgba(26, 82, 110, 0.13);
 
   font-size: 10px;
+  line-height: 1;
   font-weight: 800;
+
+  white-space: nowrap;
 }
 
-:global(.leaflet-tooltip-top:before) {
-  border-top-color: rgba(255, 255, 255, 0.96) !important;
+.marker--main .markerDot {
+  background: #1598ee;
+}
+
+.marker--agreement .markerDot {
+  background: #f4c542;
+}
+
+.marker--agreement
+  .markerLabel {
+  color: #866700;
+}
+
+.marker--excluded .markerDot {
+  background: #e45b5b;
+}
+
+.marker--excluded
+  .markerLabel {
+  color: #a02f2f;
 }
 
 @media (max-width: 620px) {
@@ -228,7 +202,6 @@
     right: 12px;
 
     min-width: 165px;
-
     padding: 11px;
   }
 
@@ -248,5 +221,18 @@
     padding: 11px 12px;
 
     font-size: 11px;
+  }
+
+  .markerLabel {
+    padding: 4px 6px;
+
+    font-size: 9px;
+  }
+
+  .markerDot {
+    width: 11px;
+    height: 11px;
+
+    flex-basis: 11px;
   }
 }
