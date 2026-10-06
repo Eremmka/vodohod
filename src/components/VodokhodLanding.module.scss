@@ -65,6 +65,12 @@
   transition: color 0.18s ease;
 }
 
+.avitoButton {
+  font-size: 18px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .nav a:hover {
   color: var(--brand-dark);
 }
@@ -1086,7 +1092,7 @@
 
 .footerTop {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   align-items: center;
   gap: 24px;
 }

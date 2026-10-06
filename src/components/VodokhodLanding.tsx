@@ -11,7 +11,6 @@ import {
   MapPinIcon,
   MenuIcon,
   PhoneIcon,
-  StarIcon,
   TelegramIcon,
   TruckIcon,
 } from './icons';
@@ -21,9 +20,13 @@ const TELEGRAM_USERNAME = 'eremkkaaa';
 const PHONE = '8 901 309 38 09';
 const PHONE_HREF = '+79013093809';
 
+const AVITO_URL =
+  'https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/dostavka_vody_vodovoz_449558415';
+
 const FORM_ENDPOINT = 'https://formspree.io/f/xljgeenk';
 
-const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const ASSET_PREFIX =
+  process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const services = [
   [
@@ -174,10 +177,15 @@ const reviews = [
 export default function VodokhodLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [lightbox, setLightbox] =
+    useState<number | null>(null);
 
   const telegramUrl = useMemo(
-    () => `https://t.me/${TELEGRAM_USERNAME.replace('@', '')}`,
+    () =>
+      `https://t.me/${TELEGRAM_USERNAME.replace(
+        '@',
+        '',
+      )}`,
     [],
   );
 
@@ -201,7 +209,9 @@ export default function VodokhodLanding() {
 
               <span>
                 <strong>ВодоХод</strong>
-                <small>доставка воды на объект</small>
+                <small>
+                  доставка воды на объект
+                </small>
               </span>
             </a>
 
@@ -212,9 +222,18 @@ export default function VodokhodLanding() {
             >
               {[
                 ['Услуги', '#services'],
-                ['Преимущества', '#advantages'],
-                ['Как мы работаем', '#how'],
-                ['Зона работы', '#area'],
+                [
+                  'Преимущества',
+                  '#advantages',
+                ],
+                [
+                  'Как мы работаем',
+                  '#how',
+                ],
+                [
+                  'Зона работы',
+                  '#area',
+                ],
                 ['Фото', '#gallery'],
                 ['Отзывы', '#reviews'],
                 ['FAQ', '#faq'],
@@ -252,12 +271,18 @@ export default function VodokhodLanding() {
               <button
                 className={styles.menuButton}
                 onClick={() =>
-                  setMenuOpen((value) => !value)
+                  setMenuOpen(
+                    (value) => !value,
+                  )
                 }
                 aria-label="Открыть меню"
                 type="button"
               >
-                {menuOpen ? <CloseIcon /> : <MenuIcon />}
+                {menuOpen ? (
+                  <CloseIcon />
+                ) : (
+                  <MenuIcon />
+                )}
               </button>
             </div>
           </div>
@@ -279,17 +304,28 @@ export default function VodokhodLanding() {
               </span>
 
               <h1>
-                Вода на объект — <span>сегодня</span>
+                Вода на объект —{' '}
+                <span>сегодня</span>
               </h1>
 
-              <p className={styles.heroLead}>
-                Водовоз «ВодоХод» с цистерной 8 м³.
-                Работаем по северу Санкт-Петербурга и
-                Ленинградской области — быстро, надёжно
-                и под вашу задачу.
+              <p
+                className={
+                  styles.heroLead
+                }
+              >
+                Водовоз «ВодоХод» с
+                цистерной 8 м³. Работаем
+                по северу Санкт-Петербурга
+                и Ленинградской области —
+                быстро, надёжно и под вашу
+                задачу.
               </p>
 
-              <div className={styles.heroButtons}>
+              <div
+                className={
+                  styles.heroButtons
+                }
+              >
                 <a
                   className="btn btn--primary"
                   href="#order"
@@ -307,7 +343,11 @@ export default function VodokhodLanding() {
                 </a>
               </div>
 
-              <div className={styles.microProofs}>
+              <div
+                className={
+                  styles.microProofs
+                }
+              >
                 <span>
                   <CheckIcon />
                   Работаем с 2009 года
@@ -320,7 +360,8 @@ export default function VodokhodLanding() {
 
                 <span>
                   <CheckIcon />
-                  Санкт-Петербург + Ленобласть
+                  Санкт-Петербург +
+                  Ленобласть
                 </span>
               </div>
             </div>
@@ -328,25 +369,35 @@ export default function VodokhodLanding() {
             <TruckIllustration />
           </div>
 
-          <div className={styles.heroStats}>
+          <div
+            className={styles.heroStats}
+          >
             <div>
               <strong>2009</strong>
-              <span>год начала работы</span>
+              <span>
+                год начала работы
+              </span>
             </div>
 
             <div>
               <strong>8 м³</strong>
-              <span>объём цистерны</span>
+              <span>
+                объём цистерны
+              </span>
             </div>
 
             <div>
               <strong>Север</strong>
-              <span>Санкт-Петербурга</span>
+              <span>
+                Санкт-Петербурга
+              </span>
             </div>
 
             <div>
               <strong>Любые</strong>
-              <span>согласованные задачи</span>
+              <span>
+                согласованные задачи
+              </span>
             </div>
           </div>
         </div>
@@ -365,36 +416,59 @@ export default function VodokhodLanding() {
             Доставка воды для любых задач
           </h2>
 
-          <p className="section-lead">
-            Неважно, бассейн у вас, стройка,
-            производство или частный дом.
-            Расскажите, что нужно решить —
-            подберём подходящий вариант доставки.
+          <p
+            className={
+              'section-lead'
+            }
+          >
+            Неважно, бассейн у вас,
+            стройка, производство или
+            частный дом. Расскажите, что
+            нужно решить — подберём
+            подходящий вариант доставки.
           </p>
 
-          <div className={styles.servicesGrid}>
-            {services.map(([title, text], index) => (
-              <article
-                className={styles.serviceCard}
-                key={title}
-              >
-                <span className={styles.serviceIcon}>
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+          <div
+            className={
+              styles.servicesGrid
+            }
+          >
+            {services.map(
+              ([title, text], index) => (
+                <article
+                  className={
+                    styles.serviceCard
+                  }
+                  key={title}
+                >
+                  <span
+                    className={
+                      styles.serviceIcon
+                    }
+                  >
+                    {String(
+                      index + 1,
+                    ).padStart(2, '0')}
+                  </span>
 
-                <div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
-              </article>
-            ))}
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                </article>
+              ),
+            )}
 
             <div
               className={
                 styles.serviceImagePlaceholder
               }
             >
-              <div className={styles.waterRipple} />
+              <div
+                className={
+                  styles.waterRipple
+                }
+              />
 
               <span>
                 Место для фото
@@ -416,22 +490,31 @@ export default function VodokhodLanding() {
           </span>
 
           <h2 className="h2">
-            Выгодно клиенту. Понятно с первого звонка.
+            Выгодно клиенту. Понятно с
+            первого звонка.
           </h2>
 
-          <div className={styles.advantagesGrid}>
+          <div
+            className={
+              styles.advantagesGrid
+            }
+          >
             {advantages.map(
               ([big, title, text]) => (
                 <article
                   key={title}
-                  className={styles.advantageCard}
+                  className={
+                    styles.advantageCard
+                  }
                 >
                   <span
                     className={
                       styles.advantageIcon
                     }
                   >
-                    <DropletIcon size={23} />
+                    <DropletIcon
+                      size={23}
+                    />
                   </span>
 
                   <strong>{big}</strong>
@@ -459,7 +542,9 @@ export default function VodokhodLanding() {
             Простой процесс заказа
           </h2>
 
-          <div className={styles.stepsGrid}>
+          <div
+            className={styles.stepsGrid}
+          >
             {[
               [
                 '01',
@@ -481,16 +566,18 @@ export default function VodokhodLanding() {
                 'Вы получаете воду',
                 'Подача воды под нужную вам задачу.',
               ],
-            ].map(([num, title, text]) => (
-              <div
-                className={styles.step}
-                key={num}
-              >
-                <span>{num}</span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </div>
-            ))}
+            ].map(
+              ([num, title, text]) => (
+                <div
+                  className={styles.step}
+                  key={num}
+                >
+                  <span>{num}</span>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -500,7 +587,11 @@ export default function VodokhodLanding() {
         id="area"
       >
         <div className="container">
-          <div className={styles.areaGrid}>
+          <div
+            className={
+              styles.areaGrid
+            }
+          >
             <div>
               <span className="eyebrow">
                 Зона работы
@@ -516,7 +607,11 @@ export default function VodokhodLanding() {
                 Ленинградской области.
               </p>
 
-              <div className={styles.areaList}>
+              <div
+                className={
+                  styles.areaList
+                }
+              >
                 <div>
                   <MapPinIcon size={20} />
                   <span>
@@ -550,14 +645,20 @@ export default function VodokhodLanding() {
               </a>
             </div>
 
-            <div className={styles.mapWrap}>
+            <div
+              className={styles.mapWrap}
+            >
               <iframe
                 title="Карта зоны работы ВодоХод"
                 src="https://www.openstreetmap.org/export/embed.html?bbox=29.65%2C59.88%2C31.6%2C60.25&layer=mapnik&marker=60.02%2C30.45"
                 loading="lazy"
               />
 
-              <div className={styles.mapBadge}>
+              <div
+                className={
+                  styles.mapBadge
+                }
+              >
                 <span />
                 Основная зона
                 <br />
@@ -580,16 +681,31 @@ export default function VodokhodLanding() {
             8 м³ воды за один рейс
           </h2>
 
-          <div className={styles.specGrid}>
-            <div className={styles.specVisual}>
+          <div
+            className={styles.specGrid}
+          >
+            <div
+              className={
+                styles.specVisual
+              }
+            >
               <TruckIllustration />
 
-              <div className={styles.photoTag}>
-                Здесь будет ваше фото водовоза
+              <div
+                className={
+                  styles.photoTag
+                }
+              >
+                Здесь будет ваше фото
+                водовоза
               </div>
             </div>
 
-            <div className={styles.specList}>
+            <div
+              className={
+                styles.specList
+              }
+            >
               {[
                 [
                   'Объём цистерны',
@@ -607,25 +723,35 @@ export default function VodokhodLanding() {
                   'Режим работы',
                   'Плановая и срочная доставка по договорённости',
                 ],
-              ].map(([label, value]) => (
-                <div
-                  className={styles.specRow}
-                  key={label}
-                >
-                  <span>
-                    <CheckIcon size={18} />
-                  </span>
+              ].map(
+                ([label, value]) => (
+                  <div
+                    className={
+                      styles.specRow
+                    }
+                    key={label}
+                  >
+                    <span>
+                      <CheckIcon
+                        size={18}
+                      />
+                    </span>
 
-                  <b>{label}</b>
+                    <b>{label}</b>
 
-                  <em>{value}</em>
-                </div>
-              ))}
+                    <em>{value}</em>
+                  </div>
+                ),
+              )}
 
-              <div className={styles.specNote}>
-                * Финальные условия, стоимость
-                и время подачи согласовываются
-                до выезда.
+              <div
+                className={
+                  styles.specNote
+                }
+              >
+                * Финальные условия,
+                стоимость и время подачи
+                согласовываются до выезда.
               </div>
             </div>
           </div>
@@ -646,34 +772,43 @@ export default function VodokhodLanding() {
           </h2>
 
           <p className="section-lead">
-            Сюда позже поставим ваши реальные
-            фотографии. Пока оставлены готовые
-            визуальные слоты, чтобы сайт уже
-            выглядел цельно.
+            Сюда позже поставим ваши
+            реальные фотографии. Пока
+            оставлены готовые визуальные
+            слоты, чтобы сайт уже выглядел
+            цельно.
           </p>
 
-          <div className={styles.galleryGrid}>
-            {gallery.map((item, index) => (
-              <button
-                className={`${styles.galleryCard} ${
-                  index === 0
-                    ? styles.galleryCardLarge
-                    : ''
-                }`}
-                key={item.title}
-                onClick={() =>
-                  setLightbox(index)
-                }
-                type="button"
-              >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                />
+          <div
+            className={
+              styles.galleryGrid
+            }
+          >
+            {gallery.map(
+              (item, index) => (
+                <button
+                  className={`${styles.galleryCard} ${
+                    index === 0
+                      ? styles.galleryCardLarge
+                      : ''
+                  }`}
+                  key={item.title}
+                  onClick={() =>
+                    setLightbox(index)
+                  }
+                  type="button"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                  />
 
-                <span>{item.title}</span>
-              </button>
-            ))}
+                  <span>
+                    {item.title}
+                  </span>
+                </button>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -691,25 +826,44 @@ export default function VodokhodLanding() {
             Нам доверяют
           </h2>
 
-          <div className={styles.reviewsGrid}>
+          <div
+            className={
+              styles.reviewsGrid
+            }
+          >
             {reviews.map(
               ([name, date, text]) => (
                 <article
-                  className={styles.reviewCard}
+                  className={
+                    styles.reviewCard
+                  }
                   key={name}
                 >
-                  <div className={styles.avatar}>
+                  <div
+                    className={
+                      styles.avatar
+                    }
+                  >
                     {name.slice(0, 1)}
                   </div>
 
-                  <div className={styles.reviewBody}>
+                  <div
+                    className={
+                      styles.reviewBody
+                    }
+                  >
                     <div
                       className={
                         styles.reviewAuthor
                       }
                     >
-                      <strong>{name}</strong>
-                      <span>{date}</span>
+                      <strong>
+                        {name}
+                      </strong>
+
+                      <span>
+                        {date}
+                      </span>
                     </div>
 
                     <div
@@ -750,12 +904,16 @@ export default function VodokhodLanding() {
             Часто задаваемые вопросы
           </h2>
 
-          <div className={styles.faqGrid}>
+          <div
+            className={styles.faqGrid}
+          >
             <div>
               {faq.map(
                 ([question, answer], index) => (
                   <div
-                    className={styles.faqItem}
+                    className={
+                      styles.faqItem
+                    }
                     key={question}
                   >
                     <button
@@ -771,7 +929,9 @@ export default function VodokhodLanding() {
                       }
                       type="button"
                     >
-                      <span>{question}</span>
+                      <span>
+                        {question}
+                      </span>
 
                       <span
                         className={
@@ -793,14 +953,18 @@ export default function VodokhodLanding() {
             </div>
 
             <aside
-              className={styles.telegramCard}
+              className={
+                styles.telegramCard
+              }
             >
               <span
                 className={
                   styles.telegramIcon
                 }
               >
-                <TelegramIcon size={26} />
+                <TelegramIcon
+                  size={26}
+                />
               </span>
 
               <h3>
@@ -809,7 +973,8 @@ export default function VodokhodLanding() {
 
               <p>
                 Напишите нам в Telegram —
-                отвечаем и согласуем доставку.
+                отвечаем и согласуем
+                доставку.
               </p>
 
               <a
@@ -831,8 +996,16 @@ export default function VodokhodLanding() {
         id="order"
       >
         <div className="container">
-          <div className={styles.orderGrid}>
-            <div className={styles.orderCopy}>
+          <div
+            className={
+              styles.orderGrid
+            }
+          >
+            <div
+              className={
+                styles.orderCopy
+              }
+            >
               <span
                 className={
                   styles.orderEyebrow
@@ -847,10 +1020,10 @@ export default function VodokhodLanding() {
               </h2>
 
               <p>
-                Заполните форму, и мы свяжемся
-                с вами, уточним детали и
-                рассчитаем стоимость под вашу
-                задачу.
+                Заполните форму, и мы
+                свяжемся с вами, уточним
+                детали и рассчитаем
+                стоимость под вашу задачу.
               </p>
 
               <div
@@ -894,10 +1067,21 @@ export default function VodokhodLanding() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  @{TELEGRAM_USERNAME.replace(
+                  @
+                  {TELEGRAM_USERNAME.replace(
                     '@',
                     '',
                   )}
+                </a>
+
+                <span>Авито</span>
+
+                <a
+                  href={AVITO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Открыть объявление
                 </a>
               </div>
             </div>
@@ -907,7 +1091,11 @@ export default function VodokhodLanding() {
               action={FORM_ENDPOINT}
               method="POST"
             >
-              <div className={styles.formGrid}>
+              <div
+                className={
+                  styles.formGrid
+                }
+              >
                 <label>
                   <span>
                     Как вас зовут
@@ -922,7 +1110,9 @@ export default function VodokhodLanding() {
                 </label>
 
                 <label>
-                  <span>Телефон</span>
+                  <span>
+                    Телефон
+                  </span>
 
                   <input
                     name="phone"
@@ -960,8 +1150,12 @@ export default function VodokhodLanding() {
                     name="volume"
                     defaultValue="8 м³"
                   >
-                    <option>8 м³</option>
-                    <option>4 м³</option>
+                    <option>
+                      8 м³
+                    </option>
+                    <option>
+                      4 м³
+                    </option>
                     <option>
                       Другой объём
                     </option>
@@ -1032,7 +1226,11 @@ export default function VodokhodLanding() {
 
       <footer className={styles.footer}>
         <div className="container">
-          <div className={styles.footerTop}>
+          <div
+            className={
+              styles.footerTop
+            }
+          >
             <a
               className={styles.logo}
               href="#top"
@@ -1042,11 +1240,16 @@ export default function VodokhodLanding() {
                   styles.logoMark
                 }
               >
-                <DropletIcon size={30} />
+                <DropletIcon
+                  size={30}
+                />
               </span>
 
               <span>
-                <strong>ВодоХод</strong>
+                <strong>
+                  ВодоХод
+                </strong>
+
                 <small>
                   доставка воды на объект
                 </small>
@@ -1055,7 +1258,10 @@ export default function VodokhodLanding() {
 
             <nav>
               {[
-                ['Услуги', '#services'],
+                [
+                  'Услуги',
+                  '#services',
+                ],
                 [
                   'Преимущества',
                   '#advantages',
@@ -1068,17 +1274,28 @@ export default function VodokhodLanding() {
                   'Зона работы',
                   '#area',
                 ],
-                ['Фото', '#gallery'],
-                ['Отзывы', '#reviews'],
-                ['FAQ', '#faq'],
-              ].map(([label, href]) => (
-                <a
-                  key={href}
-                  href={href}
-                >
-                  {label}
-                </a>
-              ))}
+                [
+                  'Фото',
+                  '#gallery',
+                ],
+                [
+                  'Отзывы',
+                  '#reviews',
+                ],
+                [
+                  'FAQ',
+                  '#faq',
+                ],
+              ].map(
+                ([label, href]) => (
+                  <a
+                    key={href}
+                    href={href}
+                  >
+                    {label}
+                  </a>
+                ),
+              )}
             </nav>
 
             <a
@@ -1090,16 +1307,24 @@ export default function VodokhodLanding() {
               <PhoneIcon size={17} />
               {PHONE}
             </a>
+            <a
+              href={AVITO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.footerPhone}
+            >
+              Авито
+            </a>
           </div>
-
+          
           <div
             className={
               styles.footerBottom
             }
           >
             <span>
-              © 2026 ВодоХод. Доставка воды
-              на объект.
+              © 2026 ВодоХод. Доставка
+              воды на объект.
             </span>
 
             <span>
@@ -1118,6 +1343,7 @@ export default function VodokhodLanding() {
         <a
           href={`tel:${PHONE_HREF}`}
           aria-label="Позвонить"
+          title="Позвонить"
         >
           <PhoneIcon size={19} />
         </a>
@@ -1127,8 +1353,22 @@ export default function VodokhodLanding() {
           target="_blank"
           rel="noreferrer"
           aria-label="Telegram"
+          title="Telegram"
         >
           <TelegramIcon size={21} />
+        </a>
+
+        <a
+          href={AVITO_URL}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Авито"
+          title="Авито"
+          className={
+            styles.avitoButton
+          }
+        >
+          <span>А</span>
         </a>
       </div>
 
