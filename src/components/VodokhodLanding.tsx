@@ -1,7 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-
+import { useState } from 'react';
 import styles from './VodokhodLanding.module.scss';
 import TruckIllustration from './TruckIllustration';
 import YandexMap from './YandexMap';
@@ -14,6 +13,7 @@ import {
   MapPinIcon,
   MenuIcon,
   PhoneIcon,
+  StarIcon,
   TelegramIcon,
   TruckIcon,
 } from './icons';
@@ -23,14 +23,17 @@ const TELEGRAM_USERNAME = 'eremkkaaa';
 const PHONE = '8 901 309 38 09';
 const PHONE_HREF = '+79013093809';
 
-const AVITO_URL =
-  'https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/dostavka_vody_vodovoz_449558415';
-
 const FORM_ENDPOINT =
   'https://formspree.io/f/xljgeenk';
 
+const AVITO_URL =
+  'https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/dostavka_vody_vodovoz_449558415';
+
 const ASSET_PREFIX =
   process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+const telegramUrl =
+  `https://t.me/${TELEGRAM_USERNAME}`;
 
 const services = [
   [
@@ -63,50 +66,50 @@ const services = [
   ],
   [
     'И многое другое',
-    'Скажите, что нужно решить — подберем вариант',
+    'Скажите, что нужно решить — подберём вариант',
   ],
 ];
 
 const advantages = [
   [
-    '2009',
-    'работаем с этого года',
-    'Более 15 лет занимаемся доставкой воды и знаем специфику работы по региону.',
-  ],
-  [
-    'Лично',
-    'владелец',
-    'С вами напрямую работает Иван — он принимает заказ и сам приезжает на объект.',
-  ],
-  [
-    'Без',
-    'посредников',
-    'Вы договариваетесь непосредственно с владельцем — без диспетчеров и лишних звеньев.',
+    'С 2009 года',
+    'опыт работы',
+    'Работаем с клиентами много лет и знаем специфику доставки.',
   ],
   [
     '8 м³',
-    'за рейс',
-    'Объём цистерны — до 8 м³. Подходит для частных и крупных задач.',
+    'объём цистерны',
+    'Большой объём за один рейс без лишних поездок.',
   ],
   [
-    'Оперативно',
+    'Свой',
+    'водовоз',
+    'Без посредников: владелец лично принимает заказ и сам приезжает.',
+  ],
+  [
+    'Гибкие',
+    'условия',
+    'Стоимость и время доставки согласовываем под конкретный адрес.',
+  ],
+  [
+    'Срочно',
     'по договорённости',
-    'Согласовываем удобное время и стараемся решить задачу максимально быстро.',
+    'Можем оперативно приехать, если есть возможность по маршруту.',
   ],
 ];
 
 const faq = [
   [
-    'Какой минимальный объём заказа?',
-    'Базовый объём — полный рейс до 8 м³. Точный объём и формат доставки согласовываем по телефону.',
+    'Какой объём воды можно заказать?',
+    'Объём цистерны — 8 м³. Точный объём и формат доставки согласовываем при заказе.',
   ],
   [
     'Сколько стоит доставка?',
-    'Цена зависит от объёма и адреса. Оставьте заявку — рассчитаем стоимость под ваш объект.',
+    'Фиксированной цены нет: стоимость зависит прежде всего от адреса и расстояния. Оставьте заявку — рассчитаем стоимость.',
   ],
   [
     'Можно ли заказать срочную доставку?',
-    'Да, срочная подача возможна по договорённости и зависит от загрузки маршрута.',
+    'Да. Срочная подача возможна по договорённости и зависит от текущей загрузки и маршрута.',
   ],
   [
     'Можно ли заказать воду для бассейна?',
@@ -114,7 +117,7 @@ const faq = [
   ],
   [
     'В какие районы вы приезжаете?',
-    'Работаем по северу Санкт-Петербурга и Ленинградской области. Дальние адреса обсуждаются отдельно.',
+    'Основная зона — север Санкт-Петербурга и ближайшие направления Ленинградской области. Более дальние северные адреса согласовываем отдельно.',
   ],
   [
     'Какая вода доставляется?',
@@ -146,53 +149,47 @@ const gallery = [
 ];
 
 const reviews = [
-  [
-    'Екатерина',
-    '3 июля',
-    'Заказывали воду уже не первый раз. Сложный объект, всё было организовано чётко. Иван всегда на связи, предупреждает обо всём заранее и выполняет договорённости.',
-  ],
-  [
-    'Николай',
-    '2 июля',
-    'Заказывали 5 м³ для бассейна. Приехали вовремя, объём и цена остались такими, как договаривались. Всё прошло отлично.',
-  ],
-  [
-    'Татьяна Таску',
-    '20 мая',
-    'Заказываем воду для бассейна уже не первый раз. Всё вовремя, как договаривались. В очередной раз воды понадобилось больше — всё организовали без проблем.',
-  ],
-  [
-    'Дмитрий Сергеев',
-    '28 июля 2025',
-    'Нужна была вода срочно. Привезли примерно через два часа после обращения. Очень оперативно, спасибо.',
-  ],
-  [
-    'Валентина',
-    '28 июня',
-    'Воду привезли примерно через полтора часа. Обращаемся уже не первый раз, всё стабильно хорошо.',
-  ],
-  [
-    'Ксения',
-    '30 июля 2025',
-    'Нужно было привезти воду в тот же день для полива. Всё организовали, помогли с гидрантом. Уже обращались раньше и снова остались довольны.',
-  ],
+  {
+    name: 'Екатерина',
+    meta: '3 июля • Авито • Сделка состоялась',
+    text: 'Заказываем воду не первый раз. Очень удобно, что Иван всегда на связи, всё можно быстро обсудить и договориться. На сложном объекте всё получилось организовать без проблем.',
+  },
+  {
+    name: 'Николай',
+    meta: '2 июля • Авито • Сделка состоялась',
+    text: 'Заказывали 5 м³ воды для бассейна. Приехали вовремя, как договаривались. Цена не изменилась, всё чётко.',
+  },
+  {
+    name: 'Татьяна Таску',
+    meta: '20 мая • Авито • Сделка состоялась',
+    text: 'Уже обращались не первый раз для бассейна. В очередной раз всё вовремя, без лишней суеты. Когда понадобилось больше воды, всё быстро организовали.',
+  },
+  {
+    name: 'Дмитрий Сергеев',
+    meta: '28 июля 2025 • Авито • Сделка состоялась',
+    text: 'Нужно было срочно привезти воду. Договорились и примерно через два часа вода уже была на месте. Очень выручили.',
+  },
+  {
+    name: 'Валентина',
+    meta: '28 июня • Авито • Сделка состоялась',
+    text: 'Вода приехала примерно через полтора часа после заказа. Всё отлично, будем обращаться ещё.',
+  },
+  {
+    name: 'Ксения',
+    meta: '30 июля 2025 • Авито • Сделка состоялась',
+    text: 'Нужно было в этот же день полить участок. Иван помог с вопросом по гидранту и организовал доставку. Остались довольны.',
+  },
 ];
 
 export default function VodokhodLanding() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
   const [openFaq, setOpenFaq] =
     useState<number | null>(0);
+
   const [lightbox, setLightbox] =
     useState<number | null>(null);
-
-  const telegramUrl = useMemo(
-    () =>
-      `https://t.me/${TELEGRAM_USERNAME.replace(
-        '@',
-        '',
-      )}`,
-    [],
-  );
 
   function closeMenu() {
     setMenuOpen(false);
@@ -200,6 +197,8 @@ export default function VodokhodLanding() {
 
   return (
     <main>
+      {/* HEADER */}
+
       <header className={styles.header}>
         <div className="container">
           <div className={styles.navbar}>
@@ -207,16 +206,14 @@ export default function VodokhodLanding() {
               className={styles.logo}
               href="#top"
               aria-label="ВодоХод — на главную"
+              onClick={closeMenu}
             >
-              <span
-                className={styles.logoMark}
-              >
+              <span className={styles.logoMark}>
                 <DropletIcon size={30} />
               </span>
 
               <span>
                 <strong>ВодоХод</strong>
-
                 <small>
                   доставка воды на объект
                 </small>
@@ -245,17 +242,22 @@ export default function VodokhodLanding() {
                   '#area',
                 ],
                 ['Фото', '#gallery'],
-                ['Отзывы', '#reviews'],
+                [
+                  'Отзывы',
+                  '#reviews',
+                ],
                 ['FAQ', '#faq'],
-              ].map(([label, href]) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={closeMenu}
-                >
-                  {label}
-                </a>
-              ))}
+              ].map(
+                ([label, href]) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={closeMenu}
+                  >
+                    {label}
+                  </a>
+                ),
+              )}
             </nav>
 
             <div
@@ -288,7 +290,8 @@ export default function VodokhodLanding() {
                 }
                 onClick={() =>
                   setMenuOpen(
-                    (value) => !value,
+                    (value) =>
+                      !value,
                   )
                 }
                 aria-label="Открыть меню"
@@ -305,12 +308,16 @@ export default function VodokhodLanding() {
         </div>
       </header>
 
+      {/* HERO */}
+
       <section
         className={styles.hero}
         id="top"
       >
         <div
-          className={styles.heroGlow}
+          className={
+            styles.heroGlow
+          }
         />
 
         <div className="container">
@@ -325,18 +332,20 @@ export default function VodokhodLanding() {
               }
             >
               <span
-                className={styles.pill}
+                className={
+                  styles.pill
+                }
               >
-                <DropletIcon
-                  size={16}
-                />
+                <DropletIcon size={16} />
                 Доставка воды для любых
                 нужд
               </span>
 
               <h1>
-                Вода на объект —{' '}
-                <span>сегодня</span>
+                Вода на объект —
+                <span>
+                  сегодня
+                </span>
               </h1>
 
               <p
@@ -345,11 +354,12 @@ export default function VodokhodLanding() {
                 }
               >
                 Водовоз «ВодоХод» с
-                цистерной 8 м³. Работаем
-                по северу Санкт-Петербурга
-                и Ленинградской области —
-                быстро, надёжно и под вашу
-                задачу.
+                цистерной 8 м³.
+                Работаем по северу
+                Санкт-Петербурга и
+                Ленинградской области —
+                быстро, надёжно и под
+                вашу задачу.
               </p>
 
               <div
@@ -406,15 +416,19 @@ export default function VodokhodLanding() {
             }
           >
             <div>
-              <strong>2009</strong>
+              <strong>
+                2009
+              </strong>
 
               <span>
-                год начала работы
+                работаем с
               </span>
             </div>
 
             <div>
-              <strong>8 м³</strong>
+              <strong>
+                8 м³
+              </strong>
 
               <span>
                 объём цистерны
@@ -422,7 +436,9 @@ export default function VodokhodLanding() {
             </div>
 
             <div>
-              <strong>Север</strong>
+              <strong>
+                Север
+              </strong>
 
               <span>
                 Санкт-Петербурга
@@ -430,7 +446,9 @@ export default function VodokhodLanding() {
             </div>
 
             <div>
-              <strong>Любые</strong>
+              <strong>
+                Любые
+              </strong>
 
               <span>
                 согласованные задачи
@@ -439,6 +457,8 @@ export default function VodokhodLanding() {
           </div>
         </div>
       </section>
+
+      {/* SERVICES */}
 
       <section
         className="section"
@@ -450,15 +470,14 @@ export default function VodokhodLanding() {
           </span>
 
           <h2 className="h2">
-            Доставка воды для любых
-            задач
+            Доставка воды для любых задач
           </h2>
 
           <p className="section-lead">
             Неважно, бассейн у вас,
             стройка, производство или
-            частный дом. Расскажите,
-            что нужно решить — подберём
+            частный дом. Расскажите, что
+            нужно решить — подберём
             подходящий вариант доставки.
           </p>
 
@@ -468,7 +487,10 @@ export default function VodokhodLanding() {
             }
           >
             {services.map(
-              ([title, text], index) => (
+              (
+                [title, text],
+                index,
+              ) => (
                 <article
                   className={
                     styles.serviceCard
@@ -482,12 +504,20 @@ export default function VodokhodLanding() {
                   >
                     {String(
                       index + 1,
-                    ).padStart(2, '0')}
+                    ).padStart(
+                      2,
+                      '0',
+                    )}
                   </span>
 
                   <div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
+                    <h3>
+                      {title}
+                    </h3>
+
+                    <p>
+                      {text}
+                    </p>
                   </div>
                 </article>
               ),
@@ -497,22 +527,19 @@ export default function VodokhodLanding() {
               className={
                 styles.serviceImagePlaceholder
               }
+              aria-hidden="true"
             >
               <div
                 className={
                   styles.waterRipple
                 }
               />
-
-              <span>
-                Место для фото
-                <br />
-                с реальной работы
-              </span>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ADVANTAGES */}
 
       <section
         className={`${styles.softSection} section`}
@@ -534,7 +561,13 @@ export default function VodokhodLanding() {
             }
           >
             {advantages.map(
-              ([big, title, text]) => (
+              (
+                [
+                  big,
+                  title,
+                  text,
+                ],
+              ) => (
                 <article
                   key={title}
                   className={
@@ -551,17 +584,25 @@ export default function VodokhodLanding() {
                     />
                   </span>
 
-                  <strong>{big}</strong>
+                  <strong>
+                    {big}
+                  </strong>
 
-                  <h3>{title}</h3>
+                  <h3>
+                    {title}
+                  </h3>
 
-                  <p>{text}</p>
+                  <p>
+                    {text}
+                  </p>
                 </article>
               ),
             )}
           </div>
         </div>
       </section>
+
+      {/* HOW WE WORK */}
 
       <section
         className="section"
@@ -603,22 +644,38 @@ export default function VodokhodLanding() {
                 'Подача воды под нужную вам задачу.',
               ],
             ].map(
-              ([num, title, text]) => (
+              (
+                [
+                  num,
+                  title,
+                  text,
+                ],
+              ) => (
                 <div
-                  className={styles.step}
+                  className={
+                    styles.step
+                  }
                   key={num}
                 >
-                  <span>{num}</span>
+                  <span>
+                    {num}
+                  </span>
 
-                  <h3>{title}</h3>
+                  <h3>
+                    {title}
+                  </h3>
 
-                  <p>{text}</p>
+                  <p>
+                    {text}
+                  </p>
                 </div>
               ),
             )}
           </div>
         </div>
       </section>
+
+      {/* AREA */}
 
       <section
         className={`${styles.areaSection} section`}
@@ -641,12 +698,12 @@ export default function VodokhodLanding() {
 
               <p className="section-lead">
                 Основная зона доставки —
-                север Санкт-Петербурга
-                и ближайшие направления
+                север Санкт-Петербурга и
+                ближайшие направления
                 Ленинградской области.
-                Севернее основной зоны
-                также можем приехать
-                по договорённости.
+                Севернее основной зоны также
+                можем приехать по
+                договорённости.
               </p>
 
               <div
@@ -655,49 +712,38 @@ export default function VodokhodLanding() {
                 }
               >
                 <div>
-                  <MapPinIcon
-                    size={20}
-                  />
+                  <MapPinIcon size={20} />
 
                   <span>
                     Кондратьевский
-                    проспект,
-                    Пискарёвка,
+                    проспект, Пискарёвка,
                     Площадь Мужества,
-                    Ручьи и
-                    Пионерская
+                    Ручьи и Пионерская
                   </span>
                 </div>
 
                 <div>
-                  <MapPinIcon
-                    size={20}
-                  />
+                  <MapPinIcon size={20} />
 
                   <span>
                     Елизаветинка,
                     Лесколово,
-                    Новое Токсово
-                    и Токсово
+                    Новое Токсово и
+                    Токсово
                   </span>
                 </div>
 
                 <div>
-                  <TruckIcon
-                    size={20}
-                  />
+                  <MapPinIcon size={20} />
 
                   <span>
-                    Белоостров и
-                    севернее —
-                    по договорённости
+                    Белоостров и севернее
+                    — по договорённости
                   </span>
                 </div>
 
                 <div>
-                  <MapPinIcon
-                    size={20}
-                  />
+                  <TruckIcon size={20} />
 
                   <span>
                     Всеволожск —
@@ -726,6 +772,8 @@ export default function VodokhodLanding() {
         </div>
       </section>
 
+      {/* TRUCK */}
+
       <section className="section">
         <div className="container">
           <span className="eyebrow">
@@ -747,15 +795,6 @@ export default function VodokhodLanding() {
               }
             >
               <TruckIllustration />
-
-              <div
-                className={
-                  styles.photoTag
-                }
-              >
-                Здесь будет ваше фото
-                водовоза
-              </div>
             </div>
 
             <div
@@ -769,7 +808,7 @@ export default function VodokhodLanding() {
                   '8 м³',
                 ],
                 [
-                  'Вид воды',
+                  'Назначение',
                   'Для согласованных бытовых и технических задач',
                 ],
                 [
@@ -781,7 +820,9 @@ export default function VodokhodLanding() {
                   'Плановая и срочная доставка по договорённости',
                 ],
               ].map(
-                ([label, value]) => (
+                (
+                  [label, value],
+                ) => (
                   <div
                     className={
                       styles.specRow
@@ -794,9 +835,13 @@ export default function VodokhodLanding() {
                       />
                     </span>
 
-                    <b>{label}</b>
+                    <b>
+                      {label}
+                    </b>
 
-                    <em>{value}</em>
+                    <em>
+                      {value}
+                    </em>
                   </div>
                 ),
               )}
@@ -815,6 +860,8 @@ export default function VodokhodLanding() {
         </div>
       </section>
 
+      {/* GALLERY */}
+
       <section
         className={`${styles.softSection} section`}
         id="gallery"
@@ -825,16 +872,14 @@ export default function VodokhodLanding() {
           </span>
 
           <h2 className="h2">
-            Как выглядит доставка
-            вживую
+            Как выглядит доставка вживую
           </h2>
 
           <p className="section-lead">
-            Сюда позже поставим ваши
-            реальные фотографии. Пока
-            оставлены готовые визуальные
-            слоты, чтобы сайт уже выглядел
-            цельно.
+            Примеры задач, для которых мы
+            доставляем воду по
+            Санкт-Петербургу и
+            Ленинградской области.
           </p>
 
           <div
@@ -843,7 +888,10 @@ export default function VodokhodLanding() {
             }
           >
             {gallery.map(
-              (item, index) => (
+              (
+                item,
+                index,
+              ) => (
                 <button
                   className={`${styles.galleryCard} ${
                     index === 0
@@ -852,7 +900,9 @@ export default function VodokhodLanding() {
                   }`}
                   key={item.title}
                   onClick={() =>
-                    setLightbox(index)
+                    setLightbox(
+                      index,
+                    )
                   }
                   type="button"
                 >
@@ -870,6 +920,8 @@ export default function VodokhodLanding() {
           </div>
         </div>
       </section>
+
+      {/* REVIEWS */}
 
       <section
         className="section"
@@ -890,19 +942,21 @@ export default function VodokhodLanding() {
             }
           >
             {reviews.map(
-              ([name, date, text]) => (
+              (review) => (
                 <article
                   className={
                     styles.reviewCard
                   }
-                  key={name}
+                  key={review.name}
                 >
                   <div
                     className={
                       styles.avatar
                     }
                   >
-                    {name.slice(0, 1)}
+                    {review.name
+                      .slice(0, 1)
+                      .toUpperCase()}
                   </div>
 
                   <div
@@ -912,35 +966,44 @@ export default function VodokhodLanding() {
                   >
                     <div
                       className={
-                        styles.reviewAuthor
+                        styles.reviewTop
                       }
                     >
                       <strong>
-                        {name}
+                        {review.name}
                       </strong>
 
                       <span>
-                        {date}
+                        {review.meta}
                       </span>
                     </div>
 
                     <div
                       className={
-                        styles.reviewSource
+                        styles.stars
                       }
+                      aria-label="5 из 5"
                     >
-                      Авито
+                      {[
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                      ].map(
+                        (star) => (
+                          <StarIcon
+                            key={
+                              star
+                            }
+                          />
+                        ),
+                      )}
                     </div>
 
-                    <div
-                      className={
-                        styles.reviewMeta
-                      }
-                    >
-                      Сделка состоялась
-                    </div>
-
-                    <p>{text}</p>
+                    <p>
+                      “{review.text}”
+                    </p>
                   </div>
                 </article>
               ),
@@ -948,6 +1011,8 @@ export default function VodokhodLanding() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
 
       <section
         className={`${styles.softSection} section`}
@@ -969,7 +1034,13 @@ export default function VodokhodLanding() {
           >
             <div>
               {faq.map(
-                ([question, answer], index) => (
+                (
+                  [
+                    question,
+                    answer,
+                  ],
+                  index,
+                ) => (
                   <div
                     className={
                       styles.faqItem
@@ -979,13 +1050,15 @@ export default function VodokhodLanding() {
                     <button
                       onClick={() =>
                         setOpenFaq(
-                          openFaq === index
+                          openFaq ===
+                            index
                             ? null
                             : index,
                         )
                       }
                       aria-expanded={
-                        openFaq === index
+                        openFaq ===
+                        index
                       }
                       type="button"
                     >
@@ -998,14 +1071,18 @@ export default function VodokhodLanding() {
                           styles.faqPlus
                         }
                       >
-                        {openFaq === index
+                        {openFaq ===
+                        index
                           ? '−'
                           : '+'}
                       </span>
                     </button>
 
-                    {openFaq === index && (
-                      <p>{answer}</p>
+                    {openFaq ===
+                      index && (
+                      <p>
+                        {answer}
+                      </p>
                     )}
                   </div>
                 ),
@@ -1032,9 +1109,9 @@ export default function VodokhodLanding() {
               </h3>
 
               <p>
-                Напишите нам в Telegram —
-                отвечаем и согласуем
-                доставку.
+                Напишите нам в
+                Telegram — отвечаем и
+                согласуем доставку.
               </p>
 
               <a
@@ -1050,6 +1127,8 @@ export default function VodokhodLanding() {
           </div>
         </div>
       </section>
+
+      {/* ORDER */}
 
       <section
         className={
@@ -1083,9 +1162,10 @@ export default function VodokhodLanding() {
 
               <p>
                 Заполните форму, и мы
-                свяжемся с вами, уточним
-                детали и рассчитаем
-                стоимость под вашу задачу.
+                свяжемся с вами,
+                уточним детали и
+                рассчитаем стоимость
+                под вашу задачу.
               </p>
 
               <div
@@ -1105,7 +1185,7 @@ export default function VodokhodLanding() {
 
                 <span>
                   <CheckIcon />
-                  Без лишних звонков
+                  Без посредников
                 </span>
               </div>
 
@@ -1134,14 +1214,13 @@ export default function VodokhodLanding() {
                   rel="noreferrer"
                 >
                   @
-                  {TELEGRAM_USERNAME.replace(
-                    '@',
-                    '',
-                  )}
+                  {
+                    TELEGRAM_USERNAME
+                  }
                 </a>
 
                 <span>
-                  Авито
+                  Avito
                 </span>
 
                 <a
@@ -1149,15 +1228,18 @@ export default function VodokhodLanding() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Открыть объявление
+                  Объявление на Avito
                 </a>
               </div>
             </div>
 
             <form
-              className={styles.form}
+              className={
+                styles.form
+              }
               action={FORM_ENDPOINT}
               method="POST"
+              acceptCharset="UTF-8"
             >
               <div
                 className={
@@ -1272,6 +1354,17 @@ export default function VodokhodLanding() {
                 value="Сайт ВодоХод"
               />
 
+              <input
+                className={
+                  styles.formHoneypot
+                }
+                type="text"
+                name="_gotcha"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
               <button
                 className="btn btn--primary"
                 type="submit"
@@ -1285,16 +1378,23 @@ export default function VodokhodLanding() {
                   styles.formConsent
                 }
               >
-                Нажимая кнопку, вы соглашаетесь
-                на обработку указанных данных
-                для связи по заявке.
+                Нажимая кнопку, вы
+                соглашаетесь на обработку
+                указанных данных для связи
+                по заявке.
               </small>
             </form>
           </div>
         </div>
       </section>
 
-      <footer className={styles.footer}>
+      {/* FOOTER */}
+
+      <footer
+        className={
+          styles.footer
+        }
+      >
         <div className="container">
           <div
             className={
@@ -1302,7 +1402,9 @@ export default function VodokhodLanding() {
             }
           >
             <a
-              className={styles.logo}
+              className={
+                styles.logo
+              }
               href="#top"
             >
               <span
@@ -1321,7 +1423,8 @@ export default function VodokhodLanding() {
                 </strong>
 
                 <small>
-                  доставка воды на объект
+                  доставка воды на
+                  объект
                 </small>
               </span>
             </a>
@@ -1337,7 +1440,7 @@ export default function VodokhodLanding() {
                   '#advantages',
                 ],
                 [
-                  'Как мы работаем',
+                  'Как работаем',
                   '#how',
                 ],
                 [
@@ -1357,7 +1460,9 @@ export default function VodokhodLanding() {
                   '#faq',
                 ],
               ].map(
-                ([label, href]) => (
+                (
+                  [label, href],
+                ) => (
                   <a
                     key={href}
                     href={href}
@@ -1374,7 +1479,10 @@ export default function VodokhodLanding() {
                 styles.footerPhone
               }
             >
-              <PhoneIcon size={17} />
+              <PhoneIcon
+                size={17}
+              />
+
               {PHONE}
             </a>
 
@@ -1383,10 +1491,11 @@ export default function VodokhodLanding() {
               target="_blank"
               rel="noreferrer"
               className={
-                styles.footerPhone
+                styles.avitoButton
               }
+              aria-label="Открыть объявление ВодоХод на Avito"
             >
-              Авито
+              A
             </a>
           </div>
 
@@ -1408,6 +1517,8 @@ export default function VodokhodLanding() {
         </div>
       </footer>
 
+      {/* FLOATING ACTIONS */}
+
       <div
         className={
           styles.floatingActions
@@ -1416,7 +1527,6 @@ export default function VodokhodLanding() {
         <a
           href={`tel:${PHONE_HREF}`}
           aria-label="Позвонить"
-          title="Позвонить"
         >
           <PhoneIcon size={19} />
         </a>
@@ -1426,7 +1536,6 @@ export default function VodokhodLanding() {
           target="_blank"
           rel="noreferrer"
           aria-label="Telegram"
-          title="Telegram"
         >
           <TelegramIcon size={21} />
         </a>
@@ -1435,15 +1544,16 @@ export default function VodokhodLanding() {
           href={AVITO_URL}
           target="_blank"
           rel="noreferrer"
-          aria-label="Авито"
-          title="Авито"
+          aria-label="Avito"
           className={
             styles.avitoButton
           }
         >
-          <span>А</span>
+          A
         </a>
       </div>
+
+      {/* LIGHTBOX */}
 
       {lightbox !== null && (
         <div
@@ -1472,10 +1582,12 @@ export default function VodokhodLanding() {
 
           <img
             src={
-              gallery[lightbox].image
+              gallery[lightbox]
+                .image
             }
             alt={
-              gallery[lightbox].title
+              gallery[lightbox]
+                .title
             }
             onClick={(event) =>
               event.stopPropagation()
@@ -1483,7 +1595,10 @@ export default function VodokhodLanding() {
           />
 
           <strong>
-            {gallery[lightbox].title}
+            {
+              gallery[lightbox]
+                .title
+            }
           </strong>
         </div>
       )}

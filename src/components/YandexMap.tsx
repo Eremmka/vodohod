@@ -1,517 +1,673 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './YandexMap.module.scss';
 
 const API_KEY =
   process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY || '';
 
-type YMapsApi = {
-  ready: Promise<void>;
+type Coordinates = [number, number];
 
-  import: (
-    moduleName: string,
-  ) => Promise<Record<string, unknown>>;
+interface YMapInstance {
+  addChild(child: unknown): YMapInstance;
+  destroy(): void;
+}
 
-  YMap: new (
+interface YMapConstructor {
+  new (
     element: HTMLElement,
     props: {
       location: {
-        center: [number, number];
+        center: Coordinates;
         zoom: number;
       };
       showScaleInCopyrights?: boolean;
     },
-    children?: unknown[],
-  ) => {
-    addChild: (child: unknown) => unknown;
-    removeChild?: (child: unknown) => unknown;
-  };
+  ): YMapInstance;
+}
 
-  YMapDefaultSchemeLayer: new (
+interface YMapLayerConstructor {
+  new (
     props?: Record<string, unknown>,
-  ) => unknown;
+  ): unknown;
+}
 
-  YMapDefaultFeaturesLayer: new (
-    props?: Record<string, unknown>,
-  ) => unknown;
+interface YMapFeatureConstructor {
+  new (props: {
+    geometry: {
+      type: 'Polygon';
+      coordinates: Coordinates[][];
+    };
+    style?: {
+      fill?: string;
+      stroke?: Array<{
+        width: number;
+        color: string;
+      }>;
+      simplificationRate?: number;
+    };
+  }): unknown;
+}
 
-  YMapFeature: new (
+interface YMapMarkerConstructor {
+  new (
     props: {
-      geometry: {
-        type: 'Polygon';
-        coordinates: number[][][];
-      };
-      style: {
-        fill: string;
-        stroke?: Array<{
-          width: number;
-          color: string;
-        }>;
-      };
-    },
-  ) => unknown;
-
-  YMapMarker: new (
-    props: {
-      coordinates: [number, number];
+      coordinates: Coordinates;
+      draggable?: boolean;
     },
     element: HTMLElement,
-  ) => unknown;
+  ): unknown;
+}
 
-  YMapControls: new (
-    props: {
-      position: string;
-    },
-    children?: unknown[],
-  ) => {
-    addChild: (child: unknown) => unknown;
-  };
-};
+interface YMaps3 {
+  ready: Promise<void>;
+
+  YMap: YMapConstructor;
+
+  YMapDefaultSchemeLayer: YMapLayerConstructor;
+
+  YMapDefaultFeaturesLayer: YMapLayerConstructor;
+
+  YMapFeature: YMapFeatureConstructor;
+
+  YMapMarker: YMapMarkerConstructor;
+}
 
 declare global {
   interface Window {
-    ymaps3?: YMapsApi;
+    ymaps3?: YMaps3;
   }
 }
 
-let yandexMapsPromise: Promise<YMapsApi> | null = null;
-
-function loadYandexMaps(): Promise<YMapsApi> {
-  if (typeof window === 'undefined') {
-    return Promise.reject(
-      new Error('Yandex Maps can only run in the browser'),
-    );
-  }
-
-  if (!API_KEY) {
-    return Promise.reject(
-      new Error('Yandex Maps API key is missing'),
-    );
-  }
-
-  if (window.ymaps3) {
-    return window.ymaps3.ready.then(() => window.ymaps3!);
-  }
-
-  if (yandexMapsPromise) {
-    return yandexMapsPromise;
-  }
-
-  yandexMapsPromise = new Promise((resolve, reject) => {
-    const existingScript = document.querySelector(
-      'script[data-yandex-maps]',
-    );
-
-    const handleLoad = () => {
-      if (!window.ymaps3) {
-        reject(
-          new Error(
-            'Yandex Maps API did not initialize',
-          ),
-        );
-        return;
-      }
-
-      window.ymaps3.ready
-        .then(() => resolve(window.ymaps3!))
-        .catch(reject);
-    };
-
-    if (existingScript) {
-      existingScript.addEventListener(
-        'load',
-        handleLoad,
-        { once: true },
-      );
-
-      existingScript.addEventListener(
-        'error',
-        () =>
-          reject(
-            new Error(
-              'Failed to load Yandex Maps API',
-            ),
-          ),
-        { once: true },
-      );
-
-      return;
-    }
-
-    const script =
-      document.createElement('script');
-
-    script.src =
-      `https://api-maps.yandex.ru/v3/?apikey=${encodeURIComponent(
-        API_KEY,
-      )}&lang=ru_RU`;
-
-    script.async = true;
-    script.dataset.yandexMaps = 'true';
-
-    script.addEventListener(
-      'load',
-      handleLoad,
-      { once: true },
-    );
-
-    script.addEventListener(
-      'error',
-      () =>
-        reject(
-          new Error(
-            'Failed to load Yandex Maps API',
-          ),
-        ),
-      { once: true },
-    );
-
-    document.head.appendChild(script);
-  });
-
-  return yandexMapsPromise;
-}
-
-const mainZone: number[][] = [
-  [30.215, 59.995],
-  [30.285, 59.985],
-  [30.365, 59.985],
-  [30.435, 60.015],
-  [30.505, 60.075],
-  [30.57, 60.145],
-  [30.59, 60.19],
-  [30.565, 60.225],
-  [30.50, 60.275],
-  [30.41, 60.29],
-  [30.31, 60.29],
-  [30.235, 60.275],
-  [30.19, 60.23],
-  [30.16, 60.17],
-  [30.18, 60.08],
+const CENTER: Coordinates = [
+  30.45,
+  60.05,
 ];
 
-const agreementZone: number[][] = [
-  [29.88, 59.98],
-  [30.10, 59.94],
-  [30.22, 59.93],
-  [30.34, 59.94],
-  [30.48, 59.98],
-  [30.61, 60.04],
-  [30.72, 60.11],
-  [30.79, 60.20],
-  [30.80, 60.30],
-  [30.72, 60.37],
-  [30.52, 60.40],
-  [30.27, 60.39],
-  [30.08, 60.34],
-  [29.94, 60.27],
-  [29.88, 60.16],
+/*
+ * Основная зона доставки.
+ */
+const MAIN_ZONE: Coordinates[] = [
+  [30.05, 60.15],
+  [30.12, 60.18],
+  [30.22, 60.19],
+  [30.32, 60.18],
+  [30.45, 60.18],
+  [30.57, 60.17],
+  [30.70, 60.15],
+  [30.82, 60.10],
+  [30.88, 60.03],
+  [30.84, 59.96],
+  [30.74, 59.91],
+  [30.62, 59.88],
+  [30.48, 59.87],
+  [30.34, 59.88],
+  [30.20, 59.91],
+  [30.08, 59.97],
+  [30.02, 60.05],
+  [30.05, 60.15],
 ];
 
-type PointData = {
+/*
+ * Дополнительная северная зона.
+ * Ездим по договорённости.
+ */
+const AGREEMENT_ZONE: Coordinates[] = [
+  [29.92, 60.28],
+  [30.10, 60.31],
+  [30.32, 60.32],
+  [30.57, 60.30],
+  [30.80, 60.27],
+  [31.00, 60.19],
+  [31.08, 60.08],
+  [31.02, 59.98],
+  [30.92, 59.88],
+  [30.76, 59.78],
+  [30.56, 59.76],
+  [30.32, 59.78],
+  [30.08, 59.84],
+  [29.95, 59.96],
+  [29.89, 60.10],
+  [29.92, 60.28],
+];
+
+const SERVICE_POINTS: Array<{
   name: string;
-  coordinates: [number, number];
-  type: 'main' | 'agreement' | 'excluded';
-};
-
-const points: PointData[] = [
+  coordinates: Coordinates;
+}> = [
   {
     name: 'Пионерская',
-    coordinates: [30.29681, 60.00248],
-    type: 'main',
+    coordinates: [
+      30.3005,
+      60.0022,
+    ],
   },
   {
     name: 'Площадь Мужества',
-    coordinates: [30.36369, 59.99831],
-    type: 'main',
+    coordinates: [
+      30.3695,
+      60.0077,
+    ],
   },
   {
     name: 'Кондратьевский проспект',
-    coordinates: [30.38444, 59.96861],
-    type: 'main',
+    coordinates: [
+      30.3775,
+      59.9868,
+    ],
   },
   {
     name: 'Пискарёвка',
-    coordinates: [30.414, 59.986],
-    type: 'main',
+    coordinates: [
+      30.4035,
+      59.9968,
+    ],
   },
   {
     name: 'Ручьи',
-    coordinates: [30.466, 60.016],
-    type: 'main',
+    coordinates: [
+      30.4575,
+      60.0175,
+    ],
   },
   {
     name: 'Елизаветинка',
-    coordinates: [30.21893, 60.26741],
-    type: 'main',
+    coordinates: [
+      29.9307,
+      60.2244,
+    ],
   },
   {
     name: 'Лесколово',
-    coordinates: [30.42893, 60.25579],
-    type: 'main',
+    coordinates: [
+      30.5254,
+      60.3198,
+    ],
   },
   {
     name: 'Новое Токсово',
-    coordinates: [30.56146, 60.20443],
-    type: 'main',
+    coordinates: [
+      30.5356,
+      60.1623,
+    ],
   },
   {
     name: 'Токсово',
-    coordinates: [30.51646, 60.15323],
-    type: 'main',
+    coordinates: [
+      30.5168,
+      60.1542,
+    ],
   },
   {
     name: 'Белоостров',
-    coordinates: [30.0125, 60.14722],
-    type: 'agreement',
-  },
-  {
-    name: 'Всеволожск',
-    coordinates: [30.65408, 60.02132],
-    type: 'excluded',
+    coordinates: [
+      29.9954,
+      60.1501,
+    ],
   },
 ];
 
-function createMarkerElement(
-  point: PointData,
-): HTMLDivElement {
-  const wrapper =
-    document.createElement('div');
+/*
+ * Всеволожск — не обслуживаем.
+ */
+const VSEVOLOZHSK: Coordinates = [
+  30.675,
+  60.02,
+];
 
-  wrapper.className =
-    `${styles.marker} ${styles[`marker--${point.type}`]}`;
+function loadYandexMaps(): Promise<void> {
+  return new Promise(
+    (resolve, reject) => {
+      if (typeof window === 'undefined') {
+        reject(
+          new Error(
+            'Window недоступен',
+          ),
+        );
+
+        return;
+      }
+
+      if (!API_KEY) {
+        reject(
+          new Error(
+            'Не указан NEXT_PUBLIC_YANDEX_MAPS_API_KEY',
+          ),
+        );
+
+        return;
+      }
+
+      if (window.ymaps3) {
+        resolve();
+
+        return;
+      }
+
+      const existingScript =
+        document.querySelector<HTMLScriptElement>(
+          'script[data-yandex-maps="true"]',
+        );
+
+      if (existingScript) {
+        const checkLoaded =
+          () => {
+            if (window.ymaps3) {
+              resolve();
+            } else {
+              reject(
+                new Error(
+                  'Скрипт Яндекс.Карт загрузился, но ymaps3 не найден',
+                ),
+              );
+            }
+          };
+
+        existingScript.addEventListener(
+          'load',
+          checkLoaded,
+          { once: true },
+        );
+
+        existingScript.addEventListener(
+          'error',
+          () => {
+            reject(
+              new Error(
+                'Не удалось загрузить API Яндекс.Карт',
+              ),
+            );
+          },
+          { once: true },
+        );
+
+        return;
+      }
+
+      const script =
+        document.createElement(
+          'script',
+        );
+
+      script.src =
+        `https://api-maps.yandex.ru/v3/?apikey=${encodeURIComponent(
+          API_KEY,
+        )}&lang=ru_RU`;
+
+      script.async = true;
+
+      script.dataset.yandexMaps =
+        'true';
+
+      script.addEventListener(
+        'load',
+        () => {
+          if (window.ymaps3) {
+            resolve();
+          } else {
+            reject(
+              new Error(
+                'API Яндекс.Карт загрузился без ymaps3',
+              ),
+            );
+          }
+        },
+        { once: true },
+      );
+
+      script.addEventListener(
+        'error',
+        () => {
+          reject(
+            new Error(
+              'Не удалось загрузить API Яндекс.Карт',
+            ),
+          );
+        },
+        { once: true },
+      );
+
+      document.head.appendChild(
+        script,
+      );
+    },
+  );
+}
+
+function createMarkerElement(
+  name: string,
+  className?: string,
+): HTMLElement {
+  const root =
+    document.createElement(
+      'div',
+    );
+
+  root.className = className
+    ? `${styles.marker} ${className}`
+    : styles.marker;
 
   const dot =
-    document.createElement('span');
+    document.createElement(
+      'span',
+    );
 
-  dot.className = styles.markerDot;
+  dot.className =
+    styles.markerDot;
 
   const label =
-    document.createElement('span');
+    document.createElement(
+      'span',
+    );
 
-  label.className = styles.markerLabel;
+  label.className =
+    styles.markerLabel;
 
-  label.textContent = point.name;
+  label.textContent = name;
 
-  wrapper.appendChild(dot);
-  wrapper.appendChild(label);
+  root.appendChild(dot);
+  root.appendChild(label);
 
-  return wrapper;
+  return root;
 }
 
 export default function YandexMap() {
+  const mapContainerRef =
+    useRef<HTMLDivElement | null>(
+      null,
+    );
+
   const mapRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<YMapInstance | null>(
+      null,
+    );
+
+  const [error, setError] =
+    useState<string | null>(
+      null,
+    );
 
   useEffect(() => {
-    let disposed = false;
-    let map: YMapsApi['YMap'] extends new (
-      ...args: never[]
-    ) => infer R
-      ? R
-      : never;
+    let cancelled = false;
 
-    let entities: unknown[] = [];
+    const initMap =
+      async () => {
+        try {
+          setError(null);
 
-    async function initMap() {
-      try {
-        const ymaps =
           await loadYandexMaps();
 
-        if (
-          disposed ||
-          !mapRef.current
-        ) {
-          return;
-        }
+          if (!window.ymaps3) {
+            throw new Error(
+              'Объект ymaps3 не найден',
+            );
+          }
 
-        const {
-          YMap,
-          YMapDefaultSchemeLayer,
-          YMapDefaultFeaturesLayer,
-          YMapFeature,
-          YMapMarker,
-        } = ymaps;
+          await window.ymaps3.ready;
 
-        const mapInstance =
-          new YMap(
-            mapRef.current,
-            {
-              location: {
-                center: [
-                  30.36,
-                  60.13,
-                ],
-                zoom: 10,
+          if (
+            cancelled ||
+            !mapContainerRef.current
+          ) {
+            return;
+          }
+
+          const {
+            YMap,
+            YMapDefaultSchemeLayer,
+            YMapDefaultFeaturesLayer,
+            YMapFeature,
+            YMapMarker,
+          } = window.ymaps3;
+
+          const map =
+            new YMap(
+              mapContainerRef.current,
+              {
+                location: {
+                  center: CENTER,
+                  zoom: 9.3,
+                },
+                showScaleInCopyrights:
+                  true,
               },
-              showScaleInCopyrights: true,
-            },
-            [
-              new YMapDefaultSchemeLayer(
-                {},
-              ),
-
-              new YMapDefaultFeaturesLayer(
-                {
-                  zIndex: 1800,
-                },
-              ),
-            ],
-          );
-
-        map =
-          mapInstance as typeof map;
-
-        const yellowPolygon =
-          new YMapFeature({
-            geometry: {
-              type: 'Polygon',
-              coordinates: [
-                agreementZone,
-              ],
-            },
-            style: {
-              fill:
-                'rgba(244, 196, 66, 0.20)',
-              stroke: [
-                {
-                  width: 2,
-                  color:
-                    'rgba(193, 145, 0, 0.72)',
-                },
-              ],
-            },
-          });
-
-        const bluePolygon =
-          new YMapFeature({
-            geometry: {
-              type: 'Polygon',
-              coordinates: [
-                mainZone,
-              ],
-            },
-            style: {
-              fill:
-                'rgba(21, 152, 238, 0.24)',
-              stroke: [
-                {
-                  width: 2.5,
-                  color:
-                    'rgba(8, 119, 201, 0.95)',
-                },
-              ],
-            },
-          });
-
-        mapInstance.addChild(
-          yellowPolygon,
-        );
-
-        mapInstance.addChild(
-          bluePolygon,
-        );
-
-        entities.push(
-          yellowPolygon,
-          bluePolygon,
-        );
-
-        points.forEach((point) => {
-          const markerElement =
-            createMarkerElement(
-              point,
             );
 
-          const marker =
+          mapRef.current =
+            map;
+
+          /*
+           * Базовый слой карты.
+           */
+          const schemeLayer =
+            new YMapDefaultSchemeLayer(
+              {},
+            );
+
+          map.addChild(
+            schemeLayer,
+          );
+
+          /*
+           * Слой объектов.
+           */
+          const featuresLayer =
+            new YMapDefaultFeaturesLayer(
+              {},
+            );
+
+          map.addChild(
+            featuresLayer,
+          );
+
+          /*
+           * Жёлтая зона:
+           * дополнительные направления
+           * по договорённости.
+           */
+          const agreementPolygon =
+            new YMapFeature({
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  AGREEMENT_ZONE,
+                ],
+              },
+
+              style: {
+                fill:
+                  'rgba(255, 201, 64, 0.18)',
+
+                stroke: [
+                  {
+                    width: 2,
+                    color:
+                      'rgba(232, 164, 0, 0.9)',
+                  },
+                ],
+
+                simplificationRate: 0,
+              },
+            });
+
+          map.addChild(
+            agreementPolygon,
+          );
+
+          /*
+           * Синяя зона:
+           * основная зона доставки.
+           */
+          const mainPolygon =
+            new YMapFeature({
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  MAIN_ZONE,
+                ],
+              },
+
+              style: {
+                fill:
+                  'rgba(21, 152, 238, 0.23)',
+
+                stroke: [
+                  {
+                    width: 3,
+                    color:
+                      'rgba(21, 152, 238, 0.95)',
+                  },
+                ],
+
+                simplificationRate: 0,
+              },
+            });
+
+          map.addChild(
+            mainPolygon,
+          );
+
+          /*
+           * Основные населённые пункты
+           * и районы обслуживания.
+           */
+          SERVICE_POINTS.forEach(
+            (
+              point,
+            ) => {
+              const element =
+                createMarkerElement(
+                  point.name,
+                );
+
+              const marker =
+                new YMapMarker(
+                  {
+                    coordinates:
+                      point.coordinates,
+                  },
+                  element,
+                );
+
+              map.addChild(
+                marker,
+              );
+            },
+          );
+
+          /*
+           * Всеволожск.
+           */
+          const vsevolozhskElement =
+            createMarkerElement(
+              'Всеволожск — не обслуживаем',
+              styles.markerDanger,
+            );
+
+          const vsevolozhskMarker =
             new YMapMarker(
               {
                 coordinates:
-                  point.coordinates,
+                  VSEVOLOZHSK,
               },
-              markerElement,
+              vsevolozhskElement,
             );
 
-          mapInstance.addChild(
-            marker,
+          map.addChild(
+            vsevolozhskMarker,
+          );
+        } catch (err) {
+          console.error(
+            'Ошибка Яндекс.Карт:',
+            err,
           );
 
-          entities.push(marker);
-        });
-      } catch (error) {
-        console.error(
-          'Yandex Maps initialization error:',
-          error,
-        );
-      }
-    }
+          if (!cancelled) {
+            setError(
+              err instanceof Error
+                ? err.message
+                : 'Не удалось загрузить карту',
+            );
+          }
+        }
+      };
 
-    initMap();
+    void initMap();
 
     return () => {
-      disposed = true;
+      cancelled = true;
 
-      if (
-        map &&
-        typeof map.removeChild ===
-          'function'
-      ) {
-        entities.forEach(
-          (entity) => {
-            try {
-              map.removeChild?.(
-                entity,
-              );
-            } catch {
-              // Ignore cleanup errors.
-            }
-          },
-        );
+      if (mapRef.current) {
+        mapRef.current.destroy();
+
+        mapRef.current = null;
       }
-
-      entities = [];
     };
   }, []);
 
   return (
-    <div className={styles.map}>
+    <div className={styles.wrapper}>
       <div
-        ref={mapRef}
-        className={styles.mapCanvas}
+        ref={mapContainerRef}
+        className={styles.map}
       />
 
       <div className={styles.legend}>
-        <div className={styles.legendTitle}>
-          Зона работы
+        <div className={styles.legendRow}>
+          <span
+            className={`${styles.legendColor} ${styles.legendBlue}`}
+          />
+
+          <span>
+            Основная зона
+          </span>
         </div>
 
-        <div className={styles.legendItem}>
+        <div className={styles.legendRow}>
           <span
-            className={`${styles.legendDot} ${styles.legendDotMain}`}
+            className={`${styles.legendColor} ${styles.legendYellow}`}
           />
-          Основная зона
+
+          <span>
+            По договорённости
+          </span>
         </div>
 
-        <div className={styles.legendItem}>
+        <div className={styles.legendRow}>
           <span
-            className={`${styles.legendDot} ${styles.legendDotAgreement}`}
+            className={`${styles.legendColor} ${styles.legendRed}`}
           />
-          По договорённости
-        </div>
 
-        <div className={styles.legendItem}>
-          <span
-            className={`${styles.legendDot} ${styles.legendDotExcluded}`}
-          />
-          Не обслуживаем
+          <span>
+            Не обслуживаем
+          </span>
         </div>
       </div>
 
-      <div className={styles.mapNote}>
-        Севернее основной зоны можем приехать
-        <strong> по договорённости.</strong>
+      <div className={styles.note}>
+        Основная зона — север
+        Санкт-Петербурга и ближайшие
+        направления Ленинградской области.
+        Дальние северные адреса
+        согласовываются отдельно.
       </div>
+
+      {error && (
+        <div className={styles.error}>
+          <strong>
+            Не удалось загрузить карту
+          </strong>
+
+          <span>
+            {error}
+          </span>
+
+          <small>
+            Проверьте API-ключ Яндекс.Карт
+            и разрешённый домен.
+          </small>
+        </div>
+      )}
     </div>
   );
 }
