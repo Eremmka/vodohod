@@ -1234,18 +1234,12 @@ export default function VodokhodLanding() {
             </div>
 
             <form
-              className={
-                styles.form
-              }
+              className={styles.form}
               action={FORM_ENDPOINT}
               method="POST"
               acceptCharset="UTF-8"
             >
-              <div
-                className={
-                  styles.formGrid
-                }
-              >
+              <div className={styles.formGrid}>
                 <label>
                   <span>
                     Как вас зовут
@@ -1253,6 +1247,7 @@ export default function VodokhodLanding() {
 
                   <input
                     name="name"
+                    type="text"
                     placeholder="Иван"
                     autoComplete="name"
                     required
@@ -1266,8 +1261,8 @@ export default function VodokhodLanding() {
 
                   <input
                     name="phone"
-                    placeholder="8 900 000-00-00"
                     type="tel"
+                    placeholder="8 900 000-00-00"
                     autoComplete="tel"
                     inputMode="tel"
                     required
@@ -1275,17 +1270,16 @@ export default function VodokhodLanding() {
                 </label>
 
                 <label
-                  className={
-                    styles.formFull
-                  }
+                  className={styles.formFull}
                 >
                   <span>
-                    Адрес доставки
+                    Куда ехать
                   </span>
 
                   <input
                     name="address"
-                    placeholder="Например: Санкт-Петербург, ул. ..."
+                    type="text"
+                    placeholder="Адрес доставки"
                     autoComplete="street-address"
                     required
                   />
@@ -1300,15 +1294,15 @@ export default function VodokhodLanding() {
                     name="volume"
                     defaultValue="8 м³"
                   >
-                    <option>
+                    <option value="8 м³">
                       8 м³
                     </option>
 
-                    <option>
+                    <option value="4 м³">
                       4 м³
                     </option>
 
-                    <option>
+                    <option value="Другой объём">
                       Другой объём
                     </option>
                   </select>
@@ -1326,9 +1320,7 @@ export default function VodokhodLanding() {
                 </label>
 
                 <label
-                  className={
-                    styles.formFull
-                  }
+                  className={styles.formFull}
                 >
                   <span>
                     Что нужно решить?
@@ -1354,34 +1346,22 @@ export default function VodokhodLanding() {
                 value="Сайт ВодоХод"
               />
 
-              <input
-                className={
-                  styles.formHoneypot
-                }
-                type="text"
-                name="_gotcha"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-              />
-
-              <button
-                className="btn btn--primary"
-                type="submit"
-              >
-                Отправить заявку
-                <ArrowIcon />
-              </button>
+              <div className={styles.formActions}>
+                <button
+                  className="btn btn--primary"
+                  type="submit"
+                >
+                  Отправить заявку
+                  <ArrowIcon />
+                </button>
+              </div>
 
               <small
-                className={
-                  styles.formConsent
-                }
+                className={styles.formConsent}
               >
-                Нажимая кнопку, вы
-                соглашаетесь на обработку
-                указанных данных для связи
-                по заявке.
+                Нажимая кнопку, вы соглашаетесь
+                на обработку указанных данных
+                для связи по заявке.
               </small>
             </form>
           </div>
