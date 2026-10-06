@@ -1,8 +1,11 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
+
 import styles from './VodokhodLanding.module.scss';
 import TruckIllustration from './TruckIllustration';
+
 import {
   ArrowIcon,
   CheckIcon,
@@ -15,6 +18,13 @@ import {
   TruckIcon,
 } from './icons';
 
+const ServiceAreaMap = dynamic(
+  () => import('./ServiceAreaMap'),
+  {
+    ssr: false,
+  },
+);
+
 const TELEGRAM_USERNAME = 'eremkkaaa';
 
 const PHONE = '8 901 309 38 09';
@@ -23,7 +33,8 @@ const PHONE_HREF = '+79013093809';
 const AVITO_URL =
   'https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/dostavka_vody_vodovoz_449558415';
 
-const FORM_ENDPOINT = 'https://formspree.io/f/xljgeenk';
+const FORM_ENDPOINT =
+  'https://formspree.io/f/xljgeenk';
 
 const ASSET_PREFIX =
   process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -176,7 +187,8 @@ const reviews = [
 
 export default function VodokhodLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] =
+    useState<number | null>(0);
   const [lightbox, setLightbox] =
     useState<number | null>(null);
 
@@ -217,7 +229,9 @@ export default function VodokhodLanding() {
 
             <nav
               className={`${styles.nav} ${
-                menuOpen ? styles.navOpen : ''
+                menuOpen
+                  ? styles.navOpen
+                  : ''
               }`}
             >
               {[
@@ -370,7 +384,9 @@ export default function VodokhodLanding() {
           </div>
 
           <div
-            className={styles.heroStats}
+            className={
+              styles.heroStats
+            }
           >
             <div>
               <strong>2009</strong>
@@ -416,11 +432,7 @@ export default function VodokhodLanding() {
             Доставка воды для любых задач
           </h2>
 
-          <p
-            className={
-              'section-lead'
-            }
-          >
+          <p className="section-lead">
             Неважно, бассейн у вас,
             стройка, производство или
             частный дом. Расскажите, что
@@ -543,7 +555,9 @@ export default function VodokhodLanding() {
           </h2>
 
           <div
-            className={styles.stepsGrid}
+            className={
+              styles.stepsGrid
+            }
           >
             {[
               [
@@ -602,9 +616,13 @@ export default function VodokhodLanding() {
               </h2>
 
               <p className="section-lead">
-                Доставляем воду по северу
-                Санкт-Петербурга и
+                Основная зона доставки —
+                север Санкт-Петербурга
+                и ближайшие направления
                 Ленинградской области.
+                Севернее основной зоны
+                также можем приехать
+                по договорённости.
               </p>
 
               <div
@@ -614,24 +632,40 @@ export default function VodokhodLanding() {
               >
                 <div>
                   <MapPinIcon size={20} />
+
                   <span>
-                    Санкт-Петербург —
-                    северные районы
+                    Кондратьевский
+                    проспект, Пискарёвка,
+                    Площадь Мужества,
+                    Ручьи и Пионерская
                   </span>
                 </div>
 
                 <div>
                   <MapPinIcon size={20} />
+
                   <span>
-                    Ленинградская область
+                    Елизаветинка,
+                    Лесколово, Новое
+                    Токсово и Токсово
                   </span>
                 </div>
 
                 <div>
                   <TruckIcon size={20} />
+
                   <span>
-                    Дальние адреса —
+                    Белоостров и севернее —
                     по договорённости
+                  </span>
+                </div>
+
+                <div>
+                  <MapPinIcon size={20} />
+
+                  <span>
+                    Всеволожск —
+                    не обслуживаем
                   </span>
                 </div>
               </div>
@@ -646,26 +680,11 @@ export default function VodokhodLanding() {
             </div>
 
             <div
-              className={styles.mapWrap}
+              className={
+                styles.mapWrap
+              }
             >
-              <iframe
-                title="Карта зоны работы ВодоХод"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=29.65%2C59.88%2C31.6%2C60.25&layer=mapnik&marker=60.02%2C30.45"
-                loading="lazy"
-              />
-
-              <div
-                className={
-                  styles.mapBadge
-                }
-              >
-                <span />
-                Основная зона
-                <br />
-                <small>
-                  Север СПб + Ленобласть
-                </small>
-              </div>
+              <ServiceAreaMap />
             </div>
           </div>
         </div>
@@ -992,7 +1011,9 @@ export default function VodokhodLanding() {
       </section>
 
       <section
-        className={styles.orderSection}
+        className={
+          styles.orderSection
+        }
         id="order"
       >
         <div className="container">
@@ -1052,7 +1073,9 @@ export default function VodokhodLanding() {
                   styles.orderContact
                 }
               >
-                <span>Телефон</span>
+                <span>
+                  Телефон
+                </span>
 
                 <a
                   href={`tel:${PHONE_HREF}`}
@@ -1060,7 +1083,9 @@ export default function VodokhodLanding() {
                   {PHONE}
                 </a>
 
-                <span>Telegram</span>
+                <span>
+                  Telegram
+                </span>
 
                 <a
                   href={telegramUrl}
@@ -1074,7 +1099,9 @@ export default function VodokhodLanding() {
                   )}
                 </a>
 
-                <span>Авито</span>
+                <span>
+                  Авито
+                </span>
 
                 <a
                   href={AVITO_URL}
@@ -1153,9 +1180,11 @@ export default function VodokhodLanding() {
                     <option>
                       8 м³
                     </option>
+
                     <option>
                       4 м³
                     </option>
+
                     <option>
                       Другой объём
                     </option>
@@ -1307,16 +1336,19 @@ export default function VodokhodLanding() {
               <PhoneIcon size={17} />
               {PHONE}
             </a>
+
             <a
               href={AVITO_URL}
               target="_blank"
               rel="noreferrer"
-              className={styles.footerPhone}
+              className={
+                styles.footerPhone
+              }
             >
               Авито
             </a>
           </div>
-          
+
           <div
             className={
               styles.footerBottom
